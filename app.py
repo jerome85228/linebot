@@ -509,29 +509,29 @@ def handle_message(event):
                 URITemplateAction(
                     label='聯絡作者',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='2',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='3',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='4',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='5',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='7',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )
+                ),
 				URITemplateAction(
-                    label='聯絡作者',
+                    label='6',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
                 )
             ]
