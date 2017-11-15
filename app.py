@@ -365,28 +365,57 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(text=content))
         return 0
-    if event.message.text == "開始玩":
+    if event.message.text == "會員專區":
         buttons_template = TemplateSendMessage(
-            alt_text='開始玩 template',
+            alt_text='會員專區 template',
             template=ButtonsTemplate(
-                title='選擇服務',
-                text='請選擇',
+                title='會員專區',
+                text='請選擇服務',
                 thumbnail_image_url='https://i.imgur.com/xQF5dZT.jpg',
                 actions=[
                     MessageTemplateAction(
-                        label='新聞',
+                        label='申請會員',
                         text='新聞'
                     ),
                     MessageTemplateAction(
-                        label='電影',
+                        label='購物車',
                         text='電影'
                     ),
                     MessageTemplateAction(
-                        label='看廢文',
+                        label='更改密碼',
                         text='看廢文'
                     ),
                     MessageTemplateAction(
-                        label='正妹',
+                        label='訂單查詢',
+                        text='正妹'
+                    )
+                ]
+            )
+        )
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+        return 0
+	if event.message.text == "據點查詢":
+        buttons_template = TemplateSendMessage(
+            alt_text='據點查詢 template',
+            template=ButtonsTemplate(
+                title='據點查詢',
+                text='請選擇地區',
+                thumbnail_image_url='https://i.imgur.com/xQF5dZT.jpg',
+                actions=[
+                    MessageTemplateAction(
+                        label='北部',
+                        text='新聞'
+                    ),
+                    MessageTemplateAction(
+                        label='中部',
+                        text='電影'
+                    ),
+                    MessageTemplateAction(
+                        label='南部',
+                        text='看廢文'
+                    ),
+                    MessageTemplateAction(
+                        label='東部',
                         text='正妹'
                     )
                 ]
@@ -490,27 +519,26 @@ def handle_message(event):
     buttons_template = TemplateSendMessage(
         alt_text='目錄 template',
         template=ButtonsTemplate(
-            title='選擇服務',
-            text='請選擇',
+            title='歡迎來到循跡點點',
+            text='請選擇服務',
             thumbnail_image_url='https://i.imgur.com/kzi5kKy.jpg',
-            actions=[
-                MessageTemplateAction(
-                    label='開始玩',
-                    text='開始玩'
-                ),
+            actions=[               
                 URITemplateAction(
                     label='關於循環經濟',
                     uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
                 ),
-                URITemplateAction(
-                    label='我們如何建立 Line Bot',
-                    uri='https://github.com/twtrubiks/line-bot-tutorial'
+                MessageTemplateAction(
+                    label='據點查詢',
+                    text='據點查詢'
+                ),
+				MessageTemplateAction(
+                    label='會員專區',
+                    text='會員專區'
                 ),
                 URITemplateAction(
-                    label='聯絡作者',
+                    label='聯絡負責人',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                ),
-							
+                )							
             ]
         )
     )
