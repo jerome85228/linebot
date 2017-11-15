@@ -394,7 +394,7 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
-	if event.message.text == "據點查詢":
+    if event.message.text == "據點查詢":
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
             template=ButtonsTemplate(
@@ -412,7 +412,7 @@ def handle_message(event):
                     ),
                     MessageTemplateAction(
                         label='南部',
-                        text='看廢文'
+                        text='看廢文'					
                     ),
                     MessageTemplateAction(
                         label='東部',
