@@ -510,10 +510,7 @@ def handle_message(event):
                     label='聯絡作者',
                     uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
                 ),
-				URITemplateAction(
-                    label='2',
-                    uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
-                )				
+							
             ]
         )
     )
