@@ -499,16 +499,16 @@ def handle_message(event):
                     text='開始玩'
                 ),
                 URITemplateAction(
-                    label='影片介紹 阿肥bot',
-                    uri='https://youtu.be/1IxtWgWxtlE'
+                    label='關於循環經濟',
+                    uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
                 ),
                 URITemplateAction(
-                    label='如何建立自己的 Line Bot',
+                    label='我們如何建立 Line Bot',
                     uri='https://github.com/twtrubiks/line-bot-tutorial'
                 ),
                 URITemplateAction(
                     label='聯絡作者',
-                    uri='https://www.facebook.com/TWTRubiks?ref=bookmarks'
+                    uri='https://www.facebook.com/appledaily.tw/?hc_ref=ARQIEDBiP8s6yzEjOkbo4pb7UaMvL_TlJ7IRZNQVYdQoCKb3s50tX-iy7rSFFmboXK4&fref=nf'
                 )
             ]
         )
