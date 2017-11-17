@@ -60,28 +60,28 @@ def handle_message(event):
                 actions=[
                     MessageTemplateAction(
                         label='北部',
-                        text='北部'
+                        text='北部地區'
                     ),
                     MessageTemplateAction(
                         label='中部',
-                        text='中部'
+                        text='中部地區'
                     ),
                     MessageTemplateAction(
                         label='南部',
-                        text='南部'					
+                        text='南部地區'					
                     ),
                     MessageTemplateAction(
                         label='東部',
-                        text='東部'
+                        text='東部地區'
                     )
                 ]
             )
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
-    if event.message.text == "北部":
+    if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
-            alt_text='北部 template',
+            alt_text='北部地區 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -138,9 +138,9 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
-    if event.message.text == "中部":
+    if event.message.text == "中部地區":
         carousel_template = TemplateSendMessage(
-            alt_text='中部 template',
+            alt_text='中部地區 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -182,9 +182,9 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
-    if event.message.text == "南部":
+    if event.message.text == "南部地區":
         carousel_template = TemplateSendMessage(
-            alt_text='南部 template',
+            alt_text='南部地區 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -230,9 +230,9 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
-    if event.message.text == "東部":
+    if event.message.text == "東部地區":
         buttons_template = TemplateSendMessage(
-            alt_text='東部據點 template',
+            alt_text='東部地區 template',
             template=ButtonsTemplate(
                 thumbnail_image_url='https://b1.rimg.tw/secretes/a4d6735a.jpg',
                 title='東部據點查詢',
