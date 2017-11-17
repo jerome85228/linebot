@@ -136,7 +136,7 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
     if event.message.text == "中部":
         carousel_template = TemplateSendMessage(
@@ -180,7 +180,7 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
     if event.message.text == "南部":
         carousel_template = TemplateSendMessage(
@@ -228,7 +228,7 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
     if event.message.text == "東部":
         buttons_template = TemplateSendMessage(
