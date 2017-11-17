@@ -89,7 +89,7 @@ def handle_message(event):
                         title='北部據點查詢',
                         text='請選擇縣市',
                         actions=[
-                                MessageTemplateAction(
+                            MessageTemplateAction(
                                 label='臺北市',
                                 text='臺北市',
                             ),
@@ -171,9 +171,9 @@ def handle_message(event):
                                 label='南投縣',
                                 text='南投縣',
                             ),
-                            MessageTemplateAction(
-                               label='雲林縣',
-                                text='雲林縣'
+					    	MessageTemplateAction(
+                                label='雲林縣',
+                                text='雲林縣',
                             )
                         ]
                     )
