@@ -81,7 +81,7 @@ def handle_message(event):
         return 0
     if event.message.text == "北部":
         carousel_template = TemplateSendMessage(
-            alt_text='北部據點 template',
+            alt_text='北部 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -140,7 +140,7 @@ def handle_message(event):
         return 0
     if event.message.text == "中部":
         carousel_template = TemplateSendMessage(
-            alt_text='中部據點 template',
+            alt_text='中部 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -184,7 +184,7 @@ def handle_message(event):
         return 0
     if event.message.text == "南部":
         carousel_template = TemplateSendMessage(
-            alt_text='南部據點 template',
+            alt_text='南部 template',
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
@@ -258,7 +258,7 @@ def handle_message(event):
         template=ButtonsTemplate(
             title='歡迎來到循跡點點',
             text='請選擇服務',
-            thumbnail_image_url='http://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
+            thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
             actions=[               
                 URITemplateAction(
                     label='關於循環經濟',
