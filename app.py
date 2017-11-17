@@ -115,6 +115,10 @@ def handle_message(event):
                             MessageTemplateAction(
                                 label='桃園市',
                                 text='桃園市'
+                            ),
+							MessageTemplateAction(
+                                label='',
+                                text=''
                             )
                         ]
                     ),
@@ -130,6 +134,10 @@ def handle_message(event):
                             MessageTemplateAction(
                                 label='新竹縣',
                                 text='新竹縣'
+                            ),
+							MessageTemplateAction(
+                                label='',
+                                text=''
                             )
                         ]
                     )
@@ -174,6 +182,10 @@ def handle_message(event):
 					    	MessageTemplateAction(
                                 label='雲林縣',
                                 text='雲林縣',
+                            ),
+							MessageTemplateAction(
+                                label='',
+                                text=''
                             )
                         ]
                     )
