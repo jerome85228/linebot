@@ -294,7 +294,76 @@ def callback():
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
-	
+    if event.message.text == "eyny":
+        content = eyny_movie()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "蘋果即時新聞":
+        content = apple_news()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "PTT 表特版 近期大於 10 推的文章":
+        content = ptt_beauty()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "來張 imgur 正妹圖片":
+        client = ImgurClient(client_id, client_secret)
+        images = client.get_album_images(album_id)
+        index = random.randint(0, len(images) - 1)
+        url = images[index].link
+        image_message = ImageSendMessage(
+            original_content_url=url,
+            preview_image_url=url
+        )
+        line_bot_api.reply_message(
+            event.reply_token, image_message)
+        return 0
+    if event.message.text == "隨便來張正妹圖片":
+        image = requests.get(API_Get_Image)
+        url = image.json().get('Url')
+        image_message = ImageSendMessage(
+            original_content_url=url,
+            preview_image_url=url
+        )
+        line_bot_api.reply_message(
+            event.reply_token, image_message)
+        return 0
+    if event.message.text == "近期熱門廢文":
+        content = ptt_hot()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "即時廢文":
+        content = ptt_gossiping()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "近期上映電影":
+        content = movie()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "科技新報":
+        content = technews()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
+    if event.message.text == "PanX泛科技":
+        content = panx()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=content))
+        return 0
     if event.message.text == "據點查詢":
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
@@ -476,25 +545,21 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
     if event.message.text == "東部":
-        carousel_template_message = TemplateSendMessage(
+        buttons_template = TemplateSendMessage(
             alt_text='東部據點 template',
-            template=CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                       thumbnail_image_url='https://b1.rimg.tw/secretes/a4d6735a.jpg',
-                        title='東部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='花蓮縣',
-                                text='花蓮縣',
-                            ),
-                            MessageTemplateAction(
-                                label='臺東縣',
-                                text='臺東縣'
-                            )
-                        ]
-                    )
+            template=ButtonsTemplate(
+                thumbnail_image_url='https://b1.rimg.tw/secretes/a4d6735a.jpg',
+                title='東部據點查詢',
+                text='請選擇縣市',
+                actions=[
+                    MessageTemplateAction(
+                        label='花蓮縣',
+                        text='花蓮縣',
+                        ),
+                    MessageTemplateAction(
+                        label='臺東縣',
+                        text='臺東縣'
+                        )
                 ]
             )
         )
