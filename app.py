@@ -56,7 +56,7 @@ def handle_message(event):
             template=ButtonsTemplate(
                 title='據點查詢',
                 text='請選擇地區',
-                thumbnail_image_url='https://imgur.com/u2dMEPE',
+                thumbnail_image_url='https://i.imgur.com/u2dMEPE.jpg',
                 actions=[
                     MessageTemplateAction(
                         label='北部',
@@ -85,7 +85,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/dlIRYTP',
+                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
                         title='北部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -104,7 +104,7 @@ def handle_message(event):
                         ]
                     ),
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/dlIRYTP',
+                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
                         title='北部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -123,7 +123,7 @@ def handle_message(event):
                         ]
                     ),
     			    CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/dlIRYTP',
+                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
                         title='北部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -152,7 +152,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/qLkJthI',
+                        thumbnail_image_url='https://i.imgur.com/qLkJthI.jpg',
                         title='中部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -171,7 +171,7 @@ def handle_message(event):
                         ]
                     ),
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/qLkJthI',
+                        thumbnail_image_url='https://i.imgur.com/qLkJthI.jpg',
                         title='中部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -200,7 +200,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/PBO9YmT',
+                        thumbnail_image_url='https://i.imgur.com/PBO9YmT.jpg',
                         title='南部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -219,7 +219,7 @@ def handle_message(event):
                         ]
                     ),
                     CarouselColumn(
-                        thumbnail_image_url='https://imgur.com/PBO9YmT',
+                        thumbnail_image_url='https://i.imgur.com/PBO9YmT.jpg',
                         title='南部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -246,7 +246,7 @@ def handle_message(event):
         buttons_template = TemplateSendMessage(
             alt_text='東部地區 template',
             template=ButtonsTemplate(
-                thumbnail_image_url='https://imgur.com/XyFXwzp',
+                thumbnail_image_url='https://i.imgur.com/XyFXwzp.jpg',
                 title='東部據點查詢',
                 text='請選擇縣市',
                 actions=[
@@ -322,7 +322,7 @@ def handle_message(event):
             template=ButtonsTemplate(
                 title='歡迎來到循跡點點',
                 text='請選擇服務',
-                thumbnail_image_url='https://imgur.com/NmV62Gs',
+                thumbnail_image_url='https://i.imgur.com/NmV62Gs.jpg',
                 actions=[               
                     MessageTemplateAction(
                         label='關於循環經濟',
