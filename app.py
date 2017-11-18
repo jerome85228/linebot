@@ -270,7 +270,7 @@ def handle_message(event):
             template=ButtonsTemplate(
                 thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
                 title='香研',
-                text='香妍SHINING SECRET是全球首支主打沉香香氛系列、純淨天然、傳遞正能量的美妝保養品牌。目前推出潔淨、保養、舒心寧靜、香氛四大系列產品共計24項單品，一次滿足身心靈的清新喜悅。',
+                text='香妍SHINING SECRET是全球首支主打沉香香氛系列、純淨天然、傳遞正能量的美妝保養品牌。',
                 actions=[
                     MessageTemplateAction(
                         label='了解香研',
