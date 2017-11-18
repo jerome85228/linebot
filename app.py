@@ -276,13 +276,9 @@ def handle_message(event):
                         label='了解香研',
                         text='我想了解香研',
                     ),
-                    MessageTemplateAction(
+                    URITemplateAction(
                         label='line@',
-                        text='https://line.me/R/ti/p/%40uur2008z'
-                    ),
-                    MessageTemplateAction(
-                        label=' ',
-                        text=' '
+                        uri='https://line.me/R/ti/p/%40uur2008z'
                     )
                 ]
             )
