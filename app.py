@@ -277,7 +277,11 @@ def handle_message(event):
                         text='我想了解香研',
                     ),
                     URITemplateAction(
-                        label='line@',
+                        label='官網',
+                        uri='https://www.zhiyuan.com.tw/ext/'
+                    ),
+                    URITemplateAction(
+                        label='加入line',
                         uri='https://line.me/R/ti/p/%40uur2008z'
                     )
                 ]
