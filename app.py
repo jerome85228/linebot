@@ -263,6 +263,33 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
+    
+    if event.message.text == "雲林縣":	
+        image_carousel_template = TemplateSendMessage(
+            alt_text='雲林縣 template',
+            template=ImageCarouselTemplate(
+                columns=[
+                    ImageCarouselColumn(
+                        image_url='https://i.imgur.com/2unBCry.jpg',
+                        action=PostbackTemplateAction(
+                            label='詳細了解',
+                            text='我想了解香研',
+                            #data='action=buy&itemid=1'
+                        )
+                    ),
+                    ImageCarouselColumn(
+                        image_url='https://example.com/item2.jpg',
+                        action=PostbackTemplateAction(
+                            label='postback2',
+                            text='postback text2',
+                            data='action=buy&itemid=2'
+                        )
+                    )
+                ]
+            )
+        ) 
+        line_bot_api.reply_message(event.reply_token, image_carousel_template)
+        return 0
  
     if event.message.text == "循環經濟":
         buttons_template = TemplateSendMessage(
@@ -291,5 +318,6 @@ def handle_message(event):
         return 0
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未此服務，請利用選單選擇其他功能呦'))	
 
+    
 if __name__ == '__main__':
     app.run()
