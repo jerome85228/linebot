@@ -265,33 +265,29 @@ def handle_message(event):
         return 0
     
     if event.message.text == "雲林縣":	
-        carousel_template = TemplateSendMessage(
+        buttons_template = TemplateSendMessage(
             alt_text='雲林縣 template',
-            template=CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
-                        title='香研',
-                        text='帶您了解香研',
-                        actions=[
-                            MessageTemplateAction(
-                                label='了解香研',
-                                text='我想了解香研',
-                            ),
-                            MessageTemplateAction(
-                                label='line@',
-                                text='https://line.me/R/ti/p/%40uur2008z'
-                            ),
-                            MessageTemplateAction(
-                                label=' ',
-                                text=' '
-                            )
-                        ]
+            template=ButtonsTemplate(
+                thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
+                title='香研',
+                text='帶您了解香研',
+                actions=[
+                    MessageTemplateAction(
+                        label='了解香研',
+                        text='我想了解香研',
+                    ),
+                    MessageTemplateAction(
+                        label='line@',
+                        text='https://line.me/R/ti/p/%40uur2008z'
+                    ),
+                    MessageTemplateAction(
+                        label=' ',
+                        text=' '
                     )
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, image_carousel_template)
+        line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
  
     if event.message.text == "循環經濟":
