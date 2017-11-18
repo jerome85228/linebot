@@ -342,7 +342,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
 		
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未此服務，請利用選單選擇其他功能呦'))
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未開啟此服務，請利用選單選擇其他功能呦'))
 
     
 if __name__ == '__main__':
