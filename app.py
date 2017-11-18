@@ -85,7 +85,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://www2.moeaboe.gov.tw/oil102/oil1022010/map/images/taiwan.png',
+                        thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Northern_Taiwan_official_determined.svg/330px-Northern_Taiwan_official_determined.svg.png',
                         title='北部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -152,7 +152,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://www2.moeaboe.gov.tw/oil102/oil1022010/map/images/taiwan.png',
+                        thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Central_Taiwan_official_determined.svg/375px-Central_Taiwan_official_determined.svg.png',
                         title='中部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -200,7 +200,7 @@ def handle_message(event):
             template=CarouselTemplate(
                 columns=[
                     CarouselColumn(
-                        thumbnail_image_url='https://www2.moeaboe.gov.tw/oil102/oil1022010/map/images/taiwan.png',
+                        thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Southern_Taiwan_official_determined.svg/330px-Southern_Taiwan_official_determined.svg.png',
                         title='南部據點查詢',
                         text='請選擇縣市',
                         actions=[
@@ -246,7 +246,7 @@ def handle_message(event):
         buttons_template = TemplateSendMessage(
             alt_text='東部地區 template',
             template=ButtonsTemplate(
-                thumbnail_image_url='https://www2.moeaboe.gov.tw/oil102/oil1022010/map/images/taiwan.png',
+                thumbnail_image_url='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Eastern_Taiwan_official_determined.svg/330px-Eastern_Taiwan_official_determined.svg.png',
                 title='東部據點查詢',
                 text='請選擇縣市',
                 actions=[
@@ -264,31 +264,33 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
  
-
-    buttons_template = TemplateSendMessage(
-        alt_text='目錄 template',
-        template=ButtonsTemplate(
-            title='歡迎來到循跡點點',
-            text='請選擇服務',
-            thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
-            actions=[               
-                URITemplateAction(
-                    label='關於循環經濟',
-                    uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
-                ),
-                MessageTemplateAction(
-                    label='據點查詢',
-                    text='據點查詢'
-                ),
-                URITemplateAction(
-                    label='聯絡負責人',
-                    uri='https://www.facebook.com/profile.php?id=100000346362054'
-                )							
-            ]
+    if event.message.text == "循環經濟":
+        buttons_template = TemplateSendMessage(
+            alt_text='目錄 template',
+            template=ButtonsTemplate(
+                title='歡迎來到循跡點點',
+                text='請選擇服務',
+                thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
+                actions=[               
+                    URITemplateAction(
+                        label='關於循環經濟',
+                        uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
+                    ),
+                    MessageTemplateAction(
+                        label='據點查詢',
+                        text='據點查詢'
+                    ),
+                    URITemplateAction(
+                        label='聯絡負責人',
+                        uri='https://www.facebook.com/profile.php?id=100000346362054'
+                    )							
+                ]
+            )
         )
-    )
-    line_bot_api.reply_message(event.reply_token, buttons_template)
-
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+        return 0
+		
+    text_message = TextSendMessage(text='不好意思，尚未此服務，請利用選單選擇其他功能呦')
 
 if __name__ == '__main__':
     app.run()
