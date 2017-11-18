@@ -265,33 +265,62 @@ def handle_message(event):
         return 0
     
     if event.message.text == "雲林縣":	
-        image_carousel_template = TemplateSendMessage(
+        carousel_template = TemplateSendMessage(
             alt_text='雲林縣 template',
-            template=ImageCarouselTemplate(
+            template=CarouselTemplate(
                 columns=[
-                    ImageCarouselColumn(
-                        image_url='https://i.imgur.com/2unBCry.jpg',
-                        action=PostbackTemplateAction(
-                            label='詳細了解',
-                            text='我想了解香研',
-                            data='action=buy&itemid=1'
-                        )
-                    ),
-                    ImageCarouselColumn(
-                        image_url='https://example.com/item2.jpg',
-                        action=PostbackTemplateAction(
-                            label='postback2',
-                            text='postback text2',
-                            data='action=buy&itemid=2'
-                        )
+                    CarouselColumn(
+                        thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
+                        title='香研',
+                        text='帶您了解香研',
+                        actions=[
+                            MessageTemplateAction(
+                                label='了解香研',
+                                text='我想了解香研',
+                            ),
+                            MessageTemplateAction(
+                                label='line@',
+                                text='https://line.me/R/ti/p/%40uur2008z'
+                            ),
+                            MessageTemplateAction(
+                                label=' ',
+                                text=' '
+                            )
+                        ]
                     )
                 ]
             )
-        ) 
+        )
         line_bot_api.reply_message(event.reply_token, image_carousel_template)
         return 0
  
     if event.message.text == "循環經濟":
+        buttons_template = TemplateSendMessage(
+            alt_text='循環經濟 template',
+            template=ButtonsTemplate(
+                title='循環經濟理念',
+                text='為您詳解何謂循環經濟',
+                thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
+                actions=[               
+                    URITemplateAction(
+                        label='影片介紹循環經濟',
+                        uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
+                    ),
+                    MessageTemplateAction(
+                        label='什麼是循環經濟?',
+                        text='循環經濟是什麼?'
+                    ),
+                    MessageTemplateAction(
+                        label='為何要循環經濟?',
+                        text='為何要循環經濟?'
+                    )				
+                ]
+            )
+        )
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+        return 0
+		
+    if event.message.text == "需要服務":
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -299,9 +328,9 @@ def handle_message(event):
                 text='請選擇服務',
                 thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
                 actions=[               
-                    URITemplateAction(
+                    MessageTemplateAction(
                         label='關於循環經濟',
-                        uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
+                        text='循環經濟'
                     ),
                     MessageTemplateAction(
                         label='據點查詢',
@@ -316,8 +345,8 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
+		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未此服務，請利用選單選擇其他功能呦'))
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幹你老師'))	
 
     
 if __name__ == '__main__':
