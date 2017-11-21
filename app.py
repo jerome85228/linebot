@@ -354,20 +354,20 @@ def handle_message(event):
             alt_text='雲林縣 template',
             template=ButtonsTemplate(
                 thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
-                title='香研',
+                title='緻遠國際',
                 text='香妍SHINING SECRET是全球首支主打沉香香氛系列、純淨天然、傳遞正能量的美妝保養品牌。',
                 actions=[
                     MessageTemplateAction(
-                        label='了解香研',
-                        text='我想了解香研',
+                        label='了解緻遠國際',
+                        text='我想了解緻遠國際',
                     ),
                     URITemplateAction(
-                        label='官網',
+                        label='官方網站',
                         uri='https://www.zhiyuan.com.tw/ext/'
                     ),
                     URITemplateAction(
                         label='加入line',
-                        uri='https://line.me/R/ti/p/%40uur2008z'
+                        uri='https://line.me/R/ti/p/%40exd6980d'
                     )
                 ]
             )
@@ -580,6 +580,18 @@ def handle_message(event):
                 ]
         )
         return 0
+
+    if event.message.text == "小循":
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='我在我在'
+                    ),
+					TextSendMessage(
+                        text='怎麼了嗎?' 
+                    )
+                ]
+        )
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
 
