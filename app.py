@@ -191,21 +191,17 @@ def handle_message(event):
         return 0
 		
     if event.message.text =="1":
-        if isinstance(event.source, SourceUser):
-            line_bot_api.push_message(
-                event.source.user_id, [
-                    TextSendMessage(
-                        text='fuck'
-                    ),
-                    TextSendMessage(
-                        text='you'
-                    )
-                ]
-            )
-        else:
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextMessage(text="Bot can't use profile API without user ID"))
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(
+                    text='fuck'
+                ),
+                TextSendMessage(
+                    text='you'
+                )
+            ]
+        )
+        
 		
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
