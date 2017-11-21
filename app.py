@@ -83,9 +83,9 @@ def handle_message(event):
     if event.message.text =="1":
         t1 = TemplateSendMessage(text='haha')
         t2 = TemplateSendMessage(text='shit')
-        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
-        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
-        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
+        #line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
+        #line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
+        line_bot_api.reply_message(event.reply_token, TemplateSendMessage(text=event.source.user_id))
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
