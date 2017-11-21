@@ -383,18 +383,18 @@ def handle_message(event):
                 text='為您詳解何謂循環經濟',
                 thumbnail_image_url='https://www.wealth.com.tw/files/d25b1c682936476f9a4f8942a9857e16.jpg',
                 actions=[               
-                    URITemplateAction(
-                        label='影片介紹循環經濟',
-                        uri='https://www.youtube.com/watch?v=LI4J4xXEuw4'
+                    MessageTemplateAction(
+                        label='一張圖看懂循環經濟',
+                        text='送圖囉'
                     ),
                     MessageTemplateAction(
-                        label='什麼是循環經濟?',
-                        text='循環經濟是什麼?'
+                        label='為什麼要有循環經濟?',
+                        text='小循說故事'
                     ),
                     MessageTemplateAction(
-                        label='為何要循環經濟?',
-                        text='為何要循環經濟?'
-                    )				
+                        label='循環經濟有啥幫助?',
+                        text='小循說故事2'
+                    )			
                 ]
             )
         )
@@ -413,8 +413,59 @@ def handle_message(event):
                 ]
         )
         return 0
+   
+    if event.message.text == "送圖囉":
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='小循馬上為您送上一張看懂循環經濟'
+                    ),
+					ImageSendMessage(
+    					original_content_url='https://i.imgur.com/4nJJ1nv.jpg',
+    					preview_image_url='https://i.imgur.com/4nJJ1nv.jpg'
+					),
+					TextSendMessage(
+                        text='從天下雜誌拿來哒ヽ(́◕◞౪◟◕‵)ﾉ' 
+                    )
+                ]
+        )
+	
+    if event.message.text == "小循說故事":
+        confirm_template = TemplateSendMessage(
+            alt_text='說故事 template',
+            template=ConfirmTemplate(
+                text='請選擇，要選左邊的呦<3',
+                actions=[
+                    MessageTemplateAction(
+                        label='繼續說',
+                        text='繼續說'
+                    ),
+                    MessageTemplateAction(
+                        label='不想聽了',
+                        text='閉嘴'
+                    )
+                ]
+            )
+        )
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶'
+                    ),
+					TextSendMessage(
+                        text='小循知道現在地球很老惹' 
+                    ),
+					TextSendMessage(
+                        text='然而人們一直耗資源製造東西丟東西(つд⊂)' 
+                    ),
+					TextSendMessage(
+                        text='所以地球生氣惹ヽ(#`Д´)ﾉ' 
+                    ),
+					confirm_template
+                ]
+        )
 		
-    if event.message.text == "需要服務":
+    if event.message.text == "呼叫小循":
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -453,7 +504,7 @@ def handle_message(event):
         )
         return 0
 		
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未開啟此服務，請利用選單選擇其他功能呦'))		
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
 
     
 if __name__ == '__main__':
