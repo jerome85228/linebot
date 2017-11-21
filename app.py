@@ -44,7 +44,10 @@ def callback():
 
     return 'ok'
 
-
+@handler.default()
+def default(event):
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未開啟此服務，請利用選單選擇其他功能呦'))
+	
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
@@ -83,7 +86,9 @@ def handle_message(event):
     if event.message.text =="1":
         t1 = TemplateSendMessage(text='haha')
         t2 = TemplateSendMessage(text='shit')
-        line_bot_api.reply_message(event.reply_token, TemplateSendMessage(text='haha'),TemplateSendMessage(text='shit'))
+        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
+        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
+        line_bot_api.push_message(event.source.user_id, TemplateSendMessage(text='shit'))
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
@@ -347,7 +352,6 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
 		
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未開啟此服務，請利用選單選擇其他功能呦'))
 
     
 if __name__ == '__main__':
