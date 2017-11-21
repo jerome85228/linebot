@@ -49,7 +49,7 @@ def callback():
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
-   
+    
     if event.message.text == "據點查詢":
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
@@ -79,6 +79,11 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)
         return 0
+		
+    if event.message.text =="1":
+        t1 = TemplateSendMessage(text='haha')
+        t2 = TemplateSendMessage(text='shit')
+        line_bot_api.reply_message(event.reply_token, t1,t2)
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
