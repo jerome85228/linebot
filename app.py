@@ -43,7 +43,7 @@ def callback():
         abort(400)
 
     return 'ok'
-
+'''
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
@@ -136,12 +136,30 @@ def handle_text_message(event):
     else:
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=event.message.text))
-	
+'''
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
     
+	if event.message.text == "profile":
+        if isinstance(event.source, SourceUser):
+            profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='Display name: ' + profile.display_name
+                    ),
+                    TextSendMessage(
+                        text='Status message: ' + profile.status_message
+                    )
+                ]
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextMessage(text="Bot can't use profile API without user ID"))
+	
     if event.message.text == "據點查詢":
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
