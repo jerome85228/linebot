@@ -592,6 +592,7 @@ def handle_message(event):
                     )
                 ]
         )
+        return 0
 		
     if event.message.text == "沒事":
         line_bot_api.reply_message(
@@ -604,6 +605,7 @@ def handle_message(event):
                     )
                 ]
         )
+        return 0
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
 
