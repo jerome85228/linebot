@@ -190,10 +190,10 @@ def handle_message(event):
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='這是目前台灣與循環經濟有關的地方喔!' 
+                        text='這是目前台灣與循環經濟有關的地方喔!(๑´ㅂ`๑)' 
                     ),
 					TextSendMessage(
-                        text='點進去可以看到各區縣市' 
+                        text='點進去可以看到各區縣市( • ̀ω•́ )ﾉ' 
                     ),
                     buttons_template
                 ]
@@ -278,7 +278,17 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, carousel_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='目前北部沒有任何相關的據點呦(๑•́ ₃ •̀๑)'
+                    ),
+					TextSendMessage(
+                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
+                    ),
+                    carousel_template
+                ]
+        )
         return 0
 		
     if event.message.text == "中部地區":
@@ -327,7 +337,17 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, carousel_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='目前雲林縣有資訊喔ヽ(́◕◞౪◟◕‵)ﾉ' 
+                    ),
+					TextSendMessage(
+                        text='還不趕快點進去看ε٩(๑> ₃ <)۶з' 
+                    ),
+                    carousel_template
+                ]
+        )
         return 0
 		
     if event.message.text == "南部地區":
@@ -376,7 +396,17 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, carousel_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='目前南部沒有任何相關的據點呦(๑•́ ₃ •̀๑)' 
+                    ),
+					TextSendMessage(
+                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
+                    ),
+                    carousel_template
+                ]
+        )
         return 0
 		
     if event.message.text == "東部地區":
@@ -398,7 +428,17 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='目前東部沒有任何相關的據點呦(๑•́ ₃ •̀๑)' 
+                    ),
+					TextSendMessage(
+                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
+                    ),
+                    buttons_template
+                ]
+        )
         return 0
     
     if event.message.text == "雲林縣":	
@@ -450,7 +490,20 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='現在環境污染很嚴重咩 ( ´•̥×•̥` )'
+                    ),
+					TextSendMessage(
+                        text='所以才出現了循環經濟來幫助我們(๑• ∀ •๑)σ' 
+                    ),
+					TextSendMessage(
+                        text='可以點擊了解循環經濟到底是什麼呢ヽ(́◕◞౪◟◕‵)ﾉ' 
+                    ),
+                    buttons_template
+                ]
+        )
         return 0
 		
     if event.message.text == "需要服務":
@@ -476,7 +529,20 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='歡迎來到循跡點點ε٩(๑> ₃ <)۶з'
+                    ),
+					TextSendMessage(
+                        text='我是小循機器人٩(๑•̀ω•́๑)۶' 
+                    ),
+					TextSendMessage(
+                        text='有什麼我可以為您服務的呢ヾ(*´∀ ˋ*)ﾉ' 
+                    ),
+                    buttons_template
+                ]
+        )
         return 0
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='不好意思，尚未開啟此服務，請利用選單選擇其他功能呦'))		
