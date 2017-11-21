@@ -44,6 +44,98 @@ def callback():
 
     return 'ok'
 
+@handler.add(MessageEvent, message=TextMessage)
+def handle_text_message(event):
+    text = event.message.text
+
+    if text == 'profile':
+        if isinstance(event.source, SourceUser):
+            profile = line_bot_api.get_profile(event.source.user_id)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='Display name: ' + profile.display_name
+                    ),
+                    TextSendMessage(
+                        text='Status message: ' + profile.status_message
+                    )
+                ]
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextMessage(text="Bot can't use profile API without user ID"))
+    elif text == 'bye':
+        if isinstance(event.source, SourceGroup):
+            line_bot_api.reply_message(
+                event.reply_token, TextMessage(text='Leaving group'))
+            line_bot_api.leave_group(event.source.group_id)
+        elif isinstance(event.source, SourceRoom):
+            line_bot_api.reply_message(
+                event.reply_token, TextMessage(text='Leaving group'))
+            line_bot_api.leave_room(event.source.room_id)
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextMessage(text="Bot can't leave from 1:1 chat"))
+    elif text == 'confirm':
+        confirm_template = ConfirmTemplate(text='Do it?', actions=[
+            MessageTemplateAction(label='Yes', text='Yes!'),
+            MessageTemplateAction(label='No', text='No!'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'buttons':
+        buttons_template = ButtonsTemplate(
+            title='My buttons sample', text='Hello, my buttons', actions=[
+                URITemplateAction(
+                    label='Go to line.me', uri='https://line.me'),
+                PostbackTemplateAction(label='ping', data='ping'),
+                PostbackTemplateAction(
+                    label='ping with text', data='ping',
+                    text='ping'),
+                MessageTemplateAction(label='Translate Rice', text='米')
+            ])
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=buttons_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'carousel':
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='hoge1', title='fuga1', actions=[
+                URITemplateAction(
+                    label='Go to line.me', uri='https://line.me'),
+                PostbackTemplateAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='hoge2', title='fuga2', actions=[
+                PostbackTemplateAction(
+                    label='ping with text', data='ping',
+                    text='ping'),
+                MessageTemplateAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Carousel alt text', template=carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'image_carousel':
+        image_carousel_template = ImageCarouselTemplate(columns=[
+            ImageCarouselColumn(image_url='https://via.placeholder.com/1024x1024',
+                                action=DatetimePickerTemplateAction(label='datetime',
+                                                                    data='datetime_postback',
+                                                                    mode='datetime')),
+            ImageCarouselColumn(image_url='https://via.placeholder.com/1024x1024',
+                                action=DatetimePickerTemplateAction(label='date',
+                                                                    data='date_postback',
+                                                                    mode='date'))
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='ImageCarousel alt text', template=image_carousel_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
+    elif text == 'imagemap':
+        pass
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=event.message.text))
 	
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -59,7 +151,7 @@ def handle_message(event):
                 thumbnail_image_url='https://i.imgur.com/u2dMEPE.jpg',
                 actions=[
                     MessageTemplateAction(
-                        label='北部',
+                        label='北部[尚未有據點]',
                         text='北部地區'
                     ),
                     MessageTemplateAction(
@@ -67,11 +159,11 @@ def handle_message(event):
                         text='中部地區'
                     ),
                     MessageTemplateAction(
-                        label='南部',
+                        label='南部[尚未有據點]',
                         text='南部地區'					
                     ),
                     MessageTemplateAction(
-                        label='東部',
+                        label='東部[尚未有據點]',
                         text='東部地區'
                     )
                 ]
@@ -93,6 +185,7 @@ def handle_message(event):
             ]
         )
         return 0
+		
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
@@ -158,8 +251,9 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, [TemplateSendMessage(text='shit'),carousel_template])
+        line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
+		
     if event.message.text == "中部地區":
         carousel_template = TemplateSendMessage(
             alt_text='中部地區 template',
@@ -171,15 +265,15 @@ def handle_message(event):
                         text='請選擇縣市',
                         actions=[
                             MessageTemplateAction(
-                                label='苗栗縣',
+                                label='苗栗縣[尚未有據點]',
                                 text='苗栗縣',
                             ),
                             MessageTemplateAction(
-                                label='臺中市',
+                                label='臺中市[尚未有據點]',
                                 text='臺中市'
                             ),
                             MessageTemplateAction(
-                                label='彰化縣',
+                                label='彰化縣[尚未有據點]',
                                 text='彰化縣'
                             )
                         ]
@@ -190,7 +284,7 @@ def handle_message(event):
                         text='請選擇縣市',
                         actions=[
                             MessageTemplateAction(
-                                label='南投縣',
+                                label='南投縣[尚未有據點]',
                                 text='南投縣',
                             ),
 					    	MessageTemplateAction(
@@ -208,6 +302,7 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
+		
     if event.message.text == "南部地區":
         carousel_template = TemplateSendMessage(
             alt_text='南部地區 template',
@@ -256,6 +351,7 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
         return 0
+		
     if event.message.text == "東部地區":
         buttons_template = TemplateSendMessage(
             alt_text='東部地區 template',
