@@ -187,7 +187,17 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='這是目前台灣與循環經濟有關的地方喔!' 
+                    ),
+					TextSendMessage(
+                        text='點進去可以看到各區縣市' 
+                    ),
+                    buttons_template
+                ]
+            )
         return 0
 		
     if event.message.text =="1":
