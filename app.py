@@ -581,7 +581,7 @@ def handle_message(event):
         )
         return 0
 
-    if event.message.text == "小循" ||"小循小循":
+    if event.message.text == "小循":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
@@ -593,14 +593,14 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text == "小循":
+    if event.message.text == "沒事":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='我在我在'
+                        text='好喔'
                     ),
 					TextSendMessage(
-                        text='怎麼了嗎?' 
+                        text='句點你ლ(◉◞౪◟◉ )ლ' 
                     )
                 ]
         )
