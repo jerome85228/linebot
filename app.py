@@ -392,8 +392,8 @@ def handle_message(event):
                         text='小循說故事'
                     ),
                     MessageTemplateAction(
-                        label='循環經濟有啥幫助?',
-                        text='小循說故事2'
+                        label='循環經濟有啥原則?',
+                        text='小循說原則'
                     )			
                 ]
             )
@@ -462,6 +462,83 @@ def handle_message(event):
                         text='所以地球生氣惹ヽ(#`Д´)ﾉ' 
                     ),
 					confirm_template
+                ]
+        )
+		
+    if event.message.text == "繼續說":
+        confirm_template = TemplateSendMessage(
+            alt_text='說故事 template',
+            template=ConfirmTemplate(
+                text='請選擇，要選左邊的呦<3',
+                actions=[
+                    MessageTemplateAction(
+                        label='繼續說',
+                        text='繼續說2'
+                    ),
+                    MessageTemplateAction(
+                        label='不想聽了',
+                        text='閉嘴'
+                    )
+                ]
+            )
+        )
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='地球氣候愈來愈可怕了'
+                    ),
+					TextSendMessage(
+                        text='為了改善環境，循環經濟粗現了' 
+                    ),
+					TextSendMessage(
+                        text='為您展示一下傳統的生產模式' 
+                    ),
+					ImageSendMessage(
+    					original_content_url='https://i.imgur.com/1hMVlfd.jpg',
+    					preview_image_url='https://i.imgur.com/1hMVlfd.jpg'
+					),
+					confirm_template
+                ]
+        )
+		
+    if event.message.text == "繼續說2":
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='再為您展示循環經濟的方式'
+                    ),
+					ImageSendMessage(
+    					original_content_url='https://i.imgur.com/nA5BVgf.jpg',
+    					preview_image_url='https://i.imgur.com/nA5BVgf.jpg'
+					),
+					TextSendMessage(
+                        text='沒錯~傳統的就是丟棄丟棄在丟棄，而循環經濟就是可再利用，減少廢棄物' 
+                    ),
+					TextSendMessage(
+                        text='所以循環經濟不僅僅環保、還可以減少消耗資源，大大的減低成本呢!' 
+                    ),
+					TextSendMessage(
+                        text='是不是有理解了呢ヾ(*´∀ ˋ*)ﾉ' 
+                    )
+                ]
+        )
+		
+    if event.message.text == "小循說原則":
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='馬上為您奉上原則圖٩(๑•̀ω•́๑)۶'
+                    ),
+					TextSendMessage(
+                        text='從荷蘭來哒!' 
+                    ),
+					ImageSendMessage(
+    					original_content_url='https://i.imgur.com/Fs7pWmK.jpg',
+    					preview_image_url='https://i.imgur.com/Fs7pWmK.jpg'
+					),
+					TextSendMessage(
+                        text='有興趣可以去訪問google大神呦( ´▽` )ﾉ' 
+                    )
                 ]
         )
 		
