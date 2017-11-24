@@ -1,10 +1,9 @@
 import requests
 import re
-import random
 import configparser
-from bs4 import BeautifulSoup
 from flask import Flask, request, abort
-from imgurpython import ImgurClient
+import mysql.connector
+from mysql.connector import errorcode
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -20,12 +19,55 @@ config.read("config.ini")
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
-client_id = config['imgur_api']['Client_ID']
-client_secret = config['imgur_api']['Client_Secret']
-album_id = config['imgur_api']['Album_ID']
-API_Get_Image = config['other_api']['API_Get_Image']
-	
-	
+
+
+#connect db
+try:
+    cnx = mysql.connector.connect(user='lifecity', password='a123456789',
+                                  host='140.125.81.1',
+                                  database='對話',
+                                  charset="utf8")
+    cursor = cnx.cursor()
+except mysql.connector.Error as err:
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+
+def find():
+    cursor.execute('SELECT 關鍵字 FROM 對話.傳來 '
+         'WHERE id傳來= %s', '*')
+    rows = cursor.fetchall()
+    for row in rows:
+            print(row)
+    return rows
+ 
+def reply():
+    query = ('SELECT 回覆1, 回覆2, 回覆3, 回覆4, 回覆5 FROM 對話.傳來 '
+         'WHERE 關鍵字 = %s')
+    cursor.execute(query, '小循')
+    for (回覆1, 回覆2, 回覆3, 回覆4, 回覆5) in cursor:
+        textString = [  TextSendMessage(
+                            text= "{}".format(回覆1)
+                        ),
+                        TextSendMessage(
+                            text= "{}".format(回覆2)
+                        ),
+                        TextSendMessage(
+                            text= "{}".format(回覆3)
+                        ),
+                        TextSendMessage(
+                            text= "{}".format(回覆4)
+                        ),
+                        TextSendMessage(
+                            text= "{}".format(回覆5)
+                        )
+                     ]
+    print(textString)
+    return textString
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -107,20 +149,7 @@ def handle_message(event):
                 ]
             )
         return 0
-		
-    if event.message.text =="1":
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(
-                    text='fuck'
-                ),
-                TextSendMessage(
-                    text='you'
-                )
-            ]
-        )
-        
-		
+		  		
     if event.message.text == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
@@ -542,7 +571,7 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text == "呼叫小循":
+    if "呼叫小循" in event.message.text:
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -581,7 +610,11 @@ def handle_message(event):
         )
         return 0
 
+
+
     if event.message.text == "小循":
+        find()
+        reply()
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
@@ -608,7 +641,8 @@ def handle_message(event):
         return 0
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
-
+    cursor.close()
+    cnx.close()
     
 if __name__ == '__main__':
     app.run()
