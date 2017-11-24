@@ -20,7 +20,7 @@ config.read("config.ini")
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
 
-'''
+
 #connect db
 cnx = mysql.connector.connect(user='lifecity', password='a123456789',
                               host='140.125.81.1',
@@ -28,15 +28,13 @@ cnx = mysql.connector.connect(user='lifecity', password='a123456789',
                               charset="utf8")
 cursor = cnx.cursor()
 
-
-def find():
-    cursor.execute('SELECT 關鍵字 FROM 對話.傳來 '
+cursor.execute('SELECT 關鍵字 FROM 對話.傳來 '
          'WHERE id傳來= %s', '*')
-    rows = cursor.fetchall()
-    for row in rows:
-            print(row)
-    return rows
- 
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+'''
 def reply():
     query = ('SELECT 回覆1, 回覆2, 回覆3, 回覆4, 回覆5 FROM 對話.傳來 '
          'WHERE 關鍵字 = %s')
@@ -617,7 +615,7 @@ def handle_message(event):
         )
         return 0
 	
-    if event.message.text == "沒事":
+    if "沒事" in event.message.text:
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
