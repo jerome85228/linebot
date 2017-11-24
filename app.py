@@ -564,7 +564,7 @@ def handle_message(event):
                 ]
         )
 		
-    if "呼叫小循" in event.message.text:
+    if "小循" in event.message.text:
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -604,7 +604,7 @@ def handle_message(event):
         return 0
 
 
-
+'''
     if event.message.text == "小循":
         find()
         reply()
@@ -619,7 +619,7 @@ def handle_message(event):
                 ]
         )
         return 0
-		
+'''		
     if event.message.text == "沒事":
         line_bot_api.reply_message(
                 event.reply_token, [
