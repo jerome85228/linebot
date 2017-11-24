@@ -68,6 +68,8 @@ def reply(word):
     return textArray
 print(reply('小循'))
 
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
@@ -592,12 +594,13 @@ def handle_message(event):
         )
         return 0
     
+'''
     for i in range (10): 
         if find(i) in event.message.text: 
             print (find(i))
             t = find(i)
             line_bot_api.reply_message(event.reply_token, reply(t))
-	
+'''	
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
     
