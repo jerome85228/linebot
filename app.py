@@ -604,7 +604,7 @@ def handle_message(event):
         return 0
 
 
-    if event.message.text == "小循":
+    if "小循" in event.message.text:
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
