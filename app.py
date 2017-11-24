@@ -2,7 +2,7 @@ import requests
 import re
 import configparser
 from flask import Flask, request, abort
-import mysql.connector
+import mysql.connector as mysql
 from mysql.connector import errorcode
 
 from linebot import (
@@ -22,7 +22,7 @@ handler = WebhookHandler(config['line_bot']['Channel_Secret'])
 
 
 #connect db
-cnx = mysql.connector.connect(user='lifecity', password='a123456789',
+cnx = mysql.connect(user='lifecity', password='a123456789',
                               host='140.125.81.1',
                               database='對話',
                               charset="utf8")
