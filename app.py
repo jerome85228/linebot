@@ -2,7 +2,7 @@ import requests
 import re
 import configparser
 from flask import Flask, request, abort
-import mysql.connector as mysql
+import mysql.connector
 from mysql.connector import errorcode
 
 from linebot import (
@@ -19,15 +19,6 @@ config.read("config.ini")
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
-
-
-#connect db
-cnx = mysql.connect(user='lifecity', password='a123456789',
-                              host='140.125.81.1',
-                              database='對話',
-                              charset="utf8")
-cursor = cnx.cursor()
-
 
 
 @app.route("/callback", methods=['POST'])
@@ -47,28 +38,6 @@ def callback():
         abort(400)
 
     return 'ok'
-
-def find(i):   
-    query = ('SELECT 關鍵字 FROM 對話.傳來 '
-                'WHERE id傳來 = %s')
-    cursor.execute(query, (i+1,))
-    for row in cursor:
-        return row[0]
-print(find(1))
-
-def reply(word):
-    query = ('SELECT 回覆1, 回覆2, 回覆3, 回覆4, 回覆5 FROM 對話.傳來 '
-                'WHERE 關鍵字 = %s')
-    cursor.execute(query, (word,))
-    row = cursor.fetchone()
-    textArray=[]
-    for i in range (5):
-        if (row[i]!= None):
-            textArray.append(TextSendMessage(text=row[i]))
-    return textArray
-print(reply('小循'))
-
-
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -593,17 +562,37 @@ def handle_message(event):
                 ]
         )
         return 0
-    
 
-    for i in range (10): 
-        if find(i) in event.message.text: 
-            print (find(i))
-            t = find(i)
-            line_bot_api.reply_message(event.reply_token, reply(t))
+
+    if "小循" in event.message.text:
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='我在我在'
+                    ),
+					TextSendMessage(
+                        text='怎麼了嗎?' 
+                    )
+                ]
+        )
+        return 0
 	
+    if "沒事" in event.message.text:
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(
+                        text='好喔'
+                    ),
+					TextSendMessage(
+                        text='句點你ლ(◉◞౪◟◉ )ლ' 
+                    )
+                ]
+        )
+        return 0
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
-    
+    cursor.close()
+    cnx.close()
     
 if __name__ == '__main__':
     app.run()
