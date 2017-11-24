@@ -20,7 +20,7 @@ config.read("config.ini")
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
 
-
+'''
 #connect db
 cnx = mysql.connector.connect(user='lifecity', password='a123456789',
                               host='140.125.81.1',
@@ -60,7 +60,7 @@ def reply():
                      ]
     print(textString)
     return textString
-
+'''
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
