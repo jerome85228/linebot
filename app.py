@@ -22,19 +22,12 @@ handler = WebhookHandler(config['line_bot']['Channel_Secret'])
 
 
 #connect db
-try:
-    cnx = mysql.connector.connect(user='lifecity', password='a123456789',
-                                  host='140.125.81.1',
-                                  database='對話',
-                                  charset="utf8")
-    cursor = cnx.cursor()
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
+cnx = mysql.connector.connect(user='lifecity', password='a123456789',
+                              host='140.125.81.1',
+                              database='對話',
+                              charset="utf8")
+cursor = cnx.cursor()
+
 
 def find():
     cursor.execute('SELECT 關鍵字 FROM 對話.傳來 '
