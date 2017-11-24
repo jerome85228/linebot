@@ -28,37 +28,8 @@ cnx = mysql.connector.connect(user='lifecity', password='a123456789',
                               charset="utf8")
 cursor = cnx.cursor()
 
-cursor.execute('SELECT 關鍵字 FROM 對話.傳來 '
-         'WHERE id傳來= %s', '*')
-rows = cursor.fetchall()
-for row in rows:
-    print(row)
 
-'''
-def reply():
-    query = ('SELECT 回覆1, 回覆2, 回覆3, 回覆4, 回覆5 FROM 對話.傳來 '
-         'WHERE 關鍵字 = %s')
-    cursor.execute(query, '小循')
-    for (回覆1, 回覆2, 回覆3, 回覆4, 回覆5) in cursor:
-        textString = [  TextSendMessage(
-                            text= "{}".format(回覆1)
-                        ),
-                        TextSendMessage(
-                            text= "{}".format(回覆2)
-                        ),
-                        TextSendMessage(
-                            text= "{}".format(回覆3)
-                        ),
-                        TextSendMessage(
-                            text= "{}".format(回覆4)
-                        ),
-                        TextSendMessage(
-                            text= "{}".format(回覆5)
-                        )
-                     ]
-    print(textString)
-    return textString
-'''
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -76,6 +47,26 @@ def callback():
         abort(400)
 
     return 'ok'
+
+def find(i):   
+    query = ('SELECT 關鍵字 FROM 對話.傳來 '
+                'WHERE id傳來 = %s')
+    cursor.execute(query, (i+1,))
+    for row in cursor:
+        return row[0]
+print(find(1))
+
+def reply(word):
+    query = ('SELECT 回覆1, 回覆2, 回覆3, 回覆4, 回覆5 FROM 對話.傳來 '
+                'WHERE 關鍵字 = %s')
+    cursor.execute(query, (word,))
+    row = cursor.fetchone()
+    textArray=[]
+    for i in range (5):
+        if (row[i]!= None):
+            textArray.append(TextSendMessage(text=row[i]))
+    return textArray
+print(reply('小循'))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -600,35 +591,17 @@ def handle_message(event):
                 ]
         )
         return 0
-
-
-    if "小循" in event.message.text:
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='我在我在'
-                    ),
-					TextSendMessage(
-                        text='怎麼了嗎?' 
-                    )
-                ]
-        )
-        return 0
+    
+    for i in range (10): 
+        if find(i) in event.message.text: 
+            print (find(i))
+            t = find(i)
+            line_bot_api.reply_message(event.reply_token, reply(t))
 	
-    if "沒事" in event.message.text:
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='好喔'
-                    ),
-					TextSendMessage(
-                        text='句點你ლ(◉◞౪◟◉ )ლ' 
-                    )
-                ]
-        )
-        return 0
 		
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
+    
+    
     cursor.close()
     cnx.close()
     
