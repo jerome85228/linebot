@@ -605,8 +605,5 @@ def handle_message(event):
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
     
     
-    cursor.close()
-    cnx.close()
-    
 if __name__ == '__main__':
     app.run()
