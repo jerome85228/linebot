@@ -130,7 +130,7 @@ def handle_message(event):
     fuck = event.message.text
     
     query = "SELECT name,text,img,link,line from Data where city = %s"
-    cur.execute(query, (雲林縣)) 
+    cur.execute(query, ('雲林縣')) 
     rows = cur.fetchall()
     print(rows)
     
