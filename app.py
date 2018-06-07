@@ -1,9 +1,10 @@
 import requests
-import re
 import configparser
 from flask import Flask, request, abort
-import mysql.connector
-from mysql.connector import errorcode
+
+import psycopg2
+import urllib.parse as urlparse
+import os
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -16,6 +17,14 @@ from linebot.models import *
 app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read("config.ini")
+
+dbul = config['db']['DATABASE_URL']
+url = urlparse.urlparse(os.environ[dbul])
+db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
+
+conn = psycopg2.connect(db)
+
+cur = conn.cursor()
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
@@ -38,14 +47,90 @@ def callback():
         abort(400)
 
     return 'ok'
+    
+def DataInfo(con)
+    query = "SELECT name,text,img,link,line from Data where city = %s"
+    cur.execute(query, (con)) 
+    rows = cur.fetchall()
+    textArray=[]
+    for (name,te,img,link,line) in rows:
+        if (rows[i]!= None):
+            textArray.append(
+                    CarouselColumn(
+                        thumbnail_image_url = img,
+                        title = name,
+                        text = te,
+                        actions=[
+                            MessageTemplateAction(
+                            label='了解'+name,
+                            text='我想了解'+name,
+                        ),
+                        URITemplateAction(
+                            label='官方網站',
+                            uri = link
+                        ),
+                        URITemplateAction(
+                            label='加入line',
+                            uri = line
+                        )
+                        ]
+                    ),                   
+                    )
+    return textArray
+      
+def selectData(text)
+    cur.execute("SELECT %s from Data", text)
+    rows = cur.fetchall()
+    return rows
+   
+def reply(word):
+    query = ('SELECT reply1, reply2, reply3, reply4, reply5 FROM conversation '
+                'WHERE key = %s')
+    cursor.execute(query, (word,))
+    row = cursor.fetchone()
+    textArray=[]
+    for i in range (5):
+        if (row[i]!= None):
+            textArray.append(TextSendMessage(text=row[i]))
+    return textArray
+
+def get_answer(message_text):
+    
+    url = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/57d93b59-bfdf-4b1f-a3fd-96d3701ee431/generateAnswer"
+
+    # 發送request到QnAMaker Endpoint要答案
+    response = requests.post(
+                   url,
+                   json.dumps({'question': message_text}),
+                   headers={
+                       'Content-Type': 'application/json',
+                       'Ocp-Apim-Subscription-Key': '51454250-1b5b-4411-b726-bbeff5a8ee54'
+                   }
+               )
+
+    data = response.json()
+
+    try: 
+        #我們使用免費service可能會超過限制（一秒可以發的request數）
+        if "error" in data:
+            return data["error"]["message"]
+        #這裡我們預設取第一個答案
+        answer = data['answers'][0]['answer']
+
+        return answer
+
+    except Exception:
+
+        return "Error occurs when finding answer"    
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
     print("event.source.user_id:", event.source.user_id)
-	
-    if event.message.text == "profile":
+	fuck = event.message.text
+    
+    if fuck == "profile":
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
             line_bot_api.reply_message(
@@ -63,7 +148,7 @@ def handle_message(event):
                 event.reply_token,
                 TextMessage(text="Bot can't use profile API without user ID"))
 	
-    if event.message.text == "據點查詢":
+    if fuck == "據點查詢":
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
             template=ButtonsTemplate(
@@ -101,9 +186,9 @@ def handle_message(event):
                     buttons_template
                 ]
             )
-        return 0
+
 		  		
-    if event.message.text == "北部地區":
+    if fuck == "北部地區":
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
             template=CarouselTemplate(
@@ -179,9 +264,9 @@ def handle_message(event):
                     carousel_template
                 ]
         )
-        return 0
+        
 		
-    if event.message.text == "中部地區":
+    if fuck == "中部地區":
         carousel_template = TemplateSendMessage(
             alt_text='中部地區 template',
             template=CarouselTemplate(
@@ -238,9 +323,9 @@ def handle_message(event):
                     carousel_template
                 ]
         )
-        return 0
+    
 		
-    if event.message.text == "南部地區":
+    if fuck == "南部地區":
         carousel_template = TemplateSendMessage(
             alt_text='南部地區 template',
             template=CarouselTemplate(
@@ -297,9 +382,9 @@ def handle_message(event):
                     carousel_template
                 ]
         )
-        return 0
+    
 		
-    if event.message.text == "東部地區":
+    if fuck == "東部地區":
         buttons_template = TemplateSendMessage(
             alt_text='東部地區 template',
             template=ButtonsTemplate(
@@ -329,9 +414,19 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-        return 0
-    
-    if event.message.text == "雲林縣":	
+      
+    for city in selectData(city)
+        if  city in fuck 
+            carousel_template = TemplateSendMessage(
+                alt_text= city,
+                template=CarouselTemplate(
+                    columns= DataInfo(city)
+                )
+            )
+            line_bot_api.reply_message(event.reply_token, carousel_template)
+        
+
+    '''if event.message.text == "雲林縣":	
         buttons_template = TemplateSendMessage(
             alt_text='雲林縣 template',
             template=ButtonsTemplate(
@@ -354,10 +449,9 @@ def handle_message(event):
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, buttons_template)
-        return 0
+        line_bot_api.reply_message(event.reply_token, buttons_template)'''
  
-    if event.message.text == "循環經濟":
+    if fuck == "循環經濟":
         buttons_template = TemplateSendMessage(
             alt_text='循環經濟 template',
             template=ButtonsTemplate(
@@ -394,9 +488,8 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-        return 0
    
-    if event.message.text == "送圖囉":
+    if fuck == "送圖囉":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
@@ -412,7 +505,7 @@ def handle_message(event):
                 ]
         )
 	
-    if event.message.text == "小循說故事":
+    if fuck == "小循說故事":
         confirm_template = TemplateSendMessage(
             alt_text='說故事 template',
             template=ConfirmTemplate(
@@ -447,7 +540,7 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text == "繼續說":
+    if fuck == "繼續說":
         confirm_template = TemplateSendMessage(
             alt_text='說故事 template',
             template=ConfirmTemplate(
@@ -483,7 +576,7 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text == "繼續說2":
+    if fuck == "繼續說2":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
@@ -505,7 +598,7 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text == "小循說原則":
+    if fuck == "小循說原則":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
@@ -524,7 +617,7 @@ def handle_message(event):
                 ]
         )
 		
-    if event.message.text =="呼叫小循":
+    if fuck =="呼叫小循":
         buttons_template = TemplateSendMessage(
             alt_text='目錄 template',
             template=ButtonsTemplate(
@@ -561,36 +654,18 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-        return 0
+        
+    if isinstance(event, MessageEvent):
+            # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
+            answer = get_answer(fuck)
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=answer)
+            )
+    return 0
 
 
-    if "小循" in event.message.text:
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='我在我在'
-                    ),
-					TextSendMessage(
-                        text='怎麼了嗎?' 
-                    )
-                ]
-        )
-        return 0
-	
-    if "沒事" in event.message.text:
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='好喔'
-                    ),
-					TextSendMessage(
-                        text='句點你ლ(◉◞౪◟◉ )ლ' 
-                    )
-                ]
-        )
-        return 0
-		
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text='小循不懂(๑•́ ₃ •̀๑)'))		
+    	
     cursor.close()
     cnx.close()
     
