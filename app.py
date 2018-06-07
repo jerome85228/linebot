@@ -18,8 +18,7 @@ app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-dbul = config['db']['DATABASE_URL']
-url = urlparse.urlparse(os.environ[dbul])
+url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 
 conn = psycopg2.connect(db)
