@@ -47,14 +47,14 @@ def callback():
         abort(400)
 
     return 'ok'
-    
-def DataInfo(con)
+  
+'''def DataInfo(con)
     query = "SELECT name,text,img,link,line from Data where city = %s"
-    cur.execute(query, (con)) 
+    cur.execute(query, (con,)) 
     rows = cur.fetchall()
     textArray=[]
     for (name,te,img,link,line) in rows:
-        if (rows[i]!= None):
+        if (rows!= None):
             textArray.append(
                     CarouselColumn(
                         thumbnail_image_url = img,
@@ -81,9 +81,9 @@ def DataInfo(con)
 def selectData(text)
     cur.execute("SELECT %s from Data", text)
     rows = cur.fetchall()
-    return rows
+    return rows'''
    
-def reply(word):
+'''def reply(word):
     query = ('SELECT reply1, reply2, reply3, reply4, reply5 FROM conversation '
                 'WHERE key = %s')
     cursor.execute(query, (word,))
@@ -92,7 +92,7 @@ def reply(word):
     for i in range (5):
         if (row[i]!= None):
             textArray.append(TextSendMessage(text=row[i]))
-    return textArray
+    return textArray'''
 
 def get_answer(message_text):
     
@@ -128,7 +128,13 @@ def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
     print("event.source.user_id:", event.source.user_id)
-	fuck = event.message.text
+    fuck = event.message.text
+    
+    query = "SELECT name,text,img,link,line from Data where city = %s"
+    cur.execute(query, (con,)) 
+    rows = cur.fetchall()
+    print(rows)
+    
     
     if fuck == "profile":
         if isinstance(event.source, SourceUser):
@@ -414,7 +420,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-      
+'''
     for city in selectData(city)
         if  city in fuck 
             carousel_template = TemplateSendMessage(
@@ -425,8 +431,8 @@ def handle_message(event):
             )
             line_bot_api.reply_message(event.reply_token, carousel_template)
         
-
-    '''if event.message.text == "雲林縣":	
+'''
+''' if event.message.text == "雲林縣":	
         buttons_template = TemplateSendMessage(
             alt_text='雲林縣 template',
             template=ButtonsTemplate(
@@ -451,7 +457,7 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, buttons_template)'''
  
-    if fuck == "循環經濟":
+    if "循環經濟" in fuck:
         buttons_template = TemplateSendMessage(
             alt_text='循環經濟 template',
             template=ButtonsTemplate(
@@ -488,7 +494,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-   
+        
     if fuck == "送圖囉":
         line_bot_api.reply_message(
                 event.reply_token, [
