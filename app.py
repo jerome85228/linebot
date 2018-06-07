@@ -420,42 +420,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-'''
-    for city in selectData(city)
-        if  city in fuck 
-            carousel_template = TemplateSendMessage(
-                alt_text= city,
-                template=CarouselTemplate(
-                    columns= DataInfo(city)
-                )
-            )
-            line_bot_api.reply_message(event.reply_token, carousel_template)
-        
-'''
-''' if event.message.text == "雲林縣":	
-        buttons_template = TemplateSendMessage(
-            alt_text='雲林縣 template',
-            template=ButtonsTemplate(
-                thumbnail_image_url='https://i.imgur.com/2unBCry.jpg',
-                title='緻遠國際',
-                text='香妍SHINING SECRET是全球首支主打沉香香氛系列、純淨天然、傳遞正能量的美妝保養品牌。',
-                actions=[
-                    MessageTemplateAction(
-                        label='了解緻遠國際',
-                        text='我想了解緻遠國際',
-                    ),
-                    URITemplateAction(
-                        label='官方網站',
-                        uri='https://www.zhiyuan.com.tw/ext/'
-                    ),
-                    URITemplateAction(
-                        label='加入line',
-                        uri='https://line.me/R/ti/p/%40exd6980d'
-                    )
-                ]
-            )
-        )
-        line_bot_api.reply_message(event.reply_token, buttons_template)'''
+
  
     if "循環經濟" in fuck:
         buttons_template = TemplateSendMessage(
