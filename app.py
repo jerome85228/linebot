@@ -621,12 +621,12 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    for city in selectData(city):
-        if city in fuck:
+    for c in selectData(city):
+        if c in tuple(fuck):
             carousel_template = TemplateSendMessage(
-                alt_text= city,
+                alt_text= c,
                 template=CarouselTemplate(
-                    columns= DataInfo(city)
+                    columns= DataInfo(c)
                 )
             )
             line_bot_api.reply_message(event.reply_token, carousel_template)
