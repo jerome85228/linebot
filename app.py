@@ -129,7 +129,7 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    city = ['臺北市','新北市','基隆市','宜蘭市','桃園市','新竹市','新竹縣','苗栗縣']
+    print(selectData(city))
     
     
     if fuck == "profile":
