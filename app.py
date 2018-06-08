@@ -129,7 +129,7 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    print(selectData('雲林縣'))
+    print(selectData('city'))
     
     
     if fuck == "profile":
@@ -621,7 +621,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    for c in selectData(city):
+    for c in selectData('city'):
         if c in tuple(fuck):
             carousel_template = TemplateSendMessage(
                 alt_text= c,
