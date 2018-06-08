@@ -78,7 +78,7 @@ def get_answer(message_text):
         return "Error occurs when finding answer"
         
 def DataInfo(con):
-    query = "SELECT name,text,img,link,line from data where city = "+con
+    query = "SELECT name,text,img,link,line from data where city = '"+con+"'"
     cur.execute(query)
     rows = cur.fetchall()
     textArray=[]
@@ -91,16 +91,16 @@ def DataInfo(con):
                         text = te,
                         actions=[
                             MessageTemplateAction(
-                            label='了解'+name,
-                            text='我想了解'+name,
+                            label='了解'+name[0],
+                            text='我想了解'+name[0],
                         ),
                         URITemplateAction(
                             label='官方網站',
-                            uri = link
+                            uri = link[0]
                         ),
                         URITemplateAction(
                             label='加入line',
-                            uri = line
+                            uri = line[0]
                         )
                         ]
                     ),                   
@@ -112,7 +112,11 @@ def selectData(text):
     query = "SELECT "+text+" from data"
     cur.execute(query)
     rows = cur.fetchall()
-    return rows
+    count = "SELECT Count("+text+") from data"
+    text=[]
+    for i in range(len(rows)):  
+        text.append(rows[i-1][0])
+    return text
         
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -122,7 +126,7 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    
+    print(selectData('city'))
     
     if fuck == "profile":
         if isinstance(event.source, SourceUser):
@@ -613,21 +617,23 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    count = selectData('Count(city)')
-    for c in selectData('city'):
+    count = selectData('Count(city)')[0]
+    '''for c in selectData('city'):
         if c in tuple(fuck):
-            da = DataInfo(c)
-            for i in range(count):
-                carousel_template = TemplateSendMessage(
-                    alt_text= c,
-                    template=CarouselTemplate(
-                        columns= da[i]
-                    )
-                )
-                line_bot_api.reply_message(event.reply_token, carousel_template)
+            da = DataInfo(c)      
+            carousel_template = TemplateSendMessage(
+            alt_text= c,
+            template=CarouselTemplate(
+                columns=[
+                    for i in range(count):
+                        da[i]
+                ]
+            )
+        )
+        line_bot_api.reply_message(event.reply_token, carousel_template)
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='目前無廠商呦'))
-            
+         '''   
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
