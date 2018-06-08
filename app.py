@@ -20,7 +20,9 @@ config.read("config.ini")
 
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
+conn = psycopg2.connect(db)
 
+cur = conn.cursor()
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
@@ -127,10 +129,7 @@ def handle_message(event):
     print("event.message.text:", event.message.text)
     print("event.source.user_id:", event.source.user_id)
     fuck = event.message.text
-    
-    conn = psycopg2.connect(db)
-
-    cur = conn.cursor() 
+     
     query = "SELECT name,text,img,link,line from Data where city = %s"
     city = '雲林縣'
     cur.execute(query, (city,)) 
