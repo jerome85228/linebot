@@ -2,7 +2,7 @@ import requests
 import configparser
 from flask import Flask, request, abort
 import json
-import urllib.parse
+import urllib.parse as urlparse
 import os
 import psycopg2
 
@@ -13,17 +13,17 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import *
-'''
+
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
-conn = psycopg2.connect(db)
+'''conn = psycopg2.connect(db)
 '''
 
 app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-DATABASE_URL = os.environ['DATABASE_URL']
+'''DATABASE_URL = os.environ['DATABASE_URL']'''
 
 
 
@@ -123,7 +123,7 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(db)
     cur = conn.cursor()
     
     print(selectData('city',cur))
