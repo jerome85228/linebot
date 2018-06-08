@@ -630,6 +630,8 @@ def handle_message(event):
                 )
             )
             line_bot_api.reply_message(event.reply_token, carousel_template)
+        else:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='目前無廠商呦'))
             
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
