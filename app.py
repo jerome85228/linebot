@@ -18,14 +18,13 @@ url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 conn = psycopg2.connect(db)
 '''
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-cur = conn.cursor()
 
 app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read("config.ini")
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
 
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
@@ -79,7 +78,7 @@ def get_answer(message_text):
 
         return "Error occurs when finding answer"
         
-def DataInfo(con):
+def DataInfo(con,cur):
     query = "SELECT name,text,img,link,line from data where city = %s"
     cur.execute(query, (con,)) 
     rows = cur.fetchall()
@@ -110,12 +109,11 @@ def DataInfo(con):
     return textArray
 
      
-def selectData(text):
+def selectData(text,cur):
     query = "SELECT %s from data"
     cur.execute(query, (text,))
     rows = cur.fetchall()
     return rows
-
         
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -125,7 +123,10 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    print(selectData('city'))
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cur = conn.cursor()
+    
+    print(selectData('city',cur))
     
     
     if fuck == "profile":
@@ -617,10 +618,10 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    count = selectData('Count(city)')
-    for c in selectData('city'):
+    count = selectData('Count(city)',cur)
+    for c in selectData('city',cur):
         if c in tuple(fuck):
-            da = DataInfo(c)
+            da = DataInfo(c,cur)
             for i in range(count):
                 carousel_template = TemplateSendMessage(
                     alt_text= c,
