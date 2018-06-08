@@ -333,7 +333,7 @@ def handle_message(event):
         )
     
 		
-    if "南部" in uck:
+    if "南部" in fuck:
         carousel_template = TemplateSendMessage(
             alt_text='南部地區 template',
             template=CarouselTemplate(
