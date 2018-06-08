@@ -94,7 +94,7 @@ def selectData(text):
 
 def get_answer(message_text):
     
-    url = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/57d93b59-bfdf-4b1f-a3fd-96d3701ee431/generateAnswer"
+    url = "https://qaqq.azurewebsites.net/qnamaker/knowledgebases/57d93b59-bfdf-4b1f-a3fd-96d3701ee431/generateAnswer"
 
     # 發送request到QnAMaker Endpoint要答案
     response = requests.post(
@@ -102,7 +102,7 @@ def get_answer(message_text):
                    json.dumps({'question': message_text}),
                    headers={
                        'Content-Type': 'application/json',
-                       'Ocp-Apim-Subscription-Key': '51454250-1b5b-4411-b726-bbeff5a8ee54'
+                       'Authorization': 'EndpointKey ' +'51454250-1b5b-4411-b726-bbeff5a8ee54'
                    }
                )
 
