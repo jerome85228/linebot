@@ -43,8 +43,8 @@ def callback():
         abort(400)
 
     return 'ok'
- 
-def DataInfo(con)
+
+def DataInfo(con):
     query = "SELECT name,text,img,link,line from data where city = %s"
     cur.execute(query, (con,)) 
     rows = cur.fetchall()
@@ -73,9 +73,11 @@ def DataInfo(con)
                     ),                   
                     )
     return textArray
-      
-def selectData(text)
-    cur.execute("SELECT %s from data", text)
+
+     
+def selectData(text):
+    query = "SELECT %s from data"
+    cur.execute(query, (text,))
     rows = cur.fetchall()
     return rows
    
