@@ -102,7 +102,7 @@ def get_answer(message_text):
                    json.dumps({'question': message_text}),
                    headers={
                        'Content-Type': 'application/json',
-                       'QnAAuthKey': '51454250-1b5b-4411-b726-bbeff5a8ee54'
+                       'QnAAuthKey': 'EndpointKey 51454250-1b5b-4411-b726-bbeff5a8ee54'
                    }
                )
 
