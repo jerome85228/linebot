@@ -21,7 +21,6 @@ config.read("config.ini")
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 conn = psycopg2.connect(db)
-
 cur = conn.cursor()
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
@@ -128,13 +127,9 @@ def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
     print("event.source.user_id:", event.source.user_id)
+    
     fuck = event.message.text
-     
-    query = "SELECT name,text,img,link,line from Data where city = %s"
-    city = '雲林縣'
-    cur.execute(query, (city,)) 
-    rows = cur.fetchall()
-    print(rows)
+    city = ['臺北市','新北市','基隆市','宜蘭市','桃園市','新竹市','新竹縣','苗栗縣']
     
     
     if fuck == "profile":
@@ -155,7 +150,7 @@ def handle_message(event):
                 event.reply_token,
                 TextMessage(text="Bot can't use profile API without user ID"))
 	
-    if "據點查詢" in fuck :
+    if "據點" in fuck :
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
             template=ButtonsTemplate(
@@ -626,7 +621,8 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    if selectData(city) in fuck:
+    for city in selectData(city):
+        if city in fuck:
             carousel_template = TemplateSendMessage(
                 alt_text= city,
                 template=CarouselTemplate(
