@@ -626,8 +626,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    for city in selectData(city):
-        if  (city == fuck) :
+    if selectData(city) in fuck:
             carousel_template = TemplateSendMessage(
                 alt_text= city,
                 template=CarouselTemplate(
