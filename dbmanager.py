@@ -6,11 +6,11 @@ url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 conn = psycopg2.connect(db)
 cur = conn.cursor()
-
+print(db)
 
 def DataInfo(con):
-    query = "SELECT name,text,img,link,line from data where city = %s"
-    cur.execute(query, (con,)) 
+    query = "SELECT name,text,img,link,line from data where city = "+con
+    cur.execute(query)
     rows = cur.fetchall()
     textArray=[]
     for (name,te,img,link,line) in rows:
@@ -40,7 +40,10 @@ def DataInfo(con):
 
      
 def selectData(text):
-    query = "SELECT %s from data"
-    cur.execute(query, (text,))
+    query = "SELECT "+text+" from data"
+    cur.execute(query)
     rows = cur.fetchall()
     return rows
+    
+print(selectData('city'))
+print(selectData('*'))
