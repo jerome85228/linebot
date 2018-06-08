@@ -21,9 +21,6 @@ config.read("config.ini")
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 
-conn = psycopg2.connect(db)
-
-cur = conn.cursor()
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
@@ -46,9 +43,9 @@ def callback():
         abort(400)
 
     return 'ok'
-  
-'''def DataInfo(con)
-    query = "SELECT name,text,img,link,line from Data where city = %s"
+ 
+def DataInfo(con)
+    query = "SELECT name,text,img,link,line from data where city = %s"
     cur.execute(query, (con,)) 
     rows = cur.fetchall()
     textArray=[]
@@ -78,9 +75,9 @@ def callback():
     return textArray
       
 def selectData(text)
-    cur.execute("SELECT %s from Data", text)
+    cur.execute("SELECT %s from data", text)
     rows = cur.fetchall()
-    return rows'''
+    return rows
    
 '''def reply(word):
     query = ('SELECT reply1, reply2, reply3, reply4, reply5 FROM conversation '
@@ -129,6 +126,9 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     fuck = event.message.text
     
+    conn = psycopg2.connect(db)
+
+    cur = conn.cursor() 
     query = "SELECT name,text,img,link,line from Data where city = %s"
     city = '雲林縣'
     cur.execute(query, (city,)) 
@@ -154,7 +154,7 @@ def handle_message(event):
                 event.reply_token,
                 TextMessage(text="Bot can't use profile API without user ID"))
 	
-    if fuck == "據點查詢":
+    if "據點查詢" in fuck :
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
             template=ButtonsTemplate(
@@ -194,7 +194,7 @@ def handle_message(event):
             )
 
 		  		
-    if fuck == "北部地區":
+    if "北部" in fuck:
         carousel_template = TemplateSendMessage(
             alt_text='北部地區 template',
             template=CarouselTemplate(
@@ -272,7 +272,7 @@ def handle_message(event):
         )
         
 		
-    if fuck == "中部地區":
+    if "中部" in fuck:
         carousel_template = TemplateSendMessage(
             alt_text='中部地區 template',
             template=CarouselTemplate(
@@ -331,7 +331,7 @@ def handle_message(event):
         )
     
 		
-    if fuck == "南部地區":
+    if "南部" in uck:
         carousel_template = TemplateSendMessage(
             alt_text='南部地區 template',
             template=CarouselTemplate(
@@ -390,7 +390,7 @@ def handle_message(event):
         )
     
 		
-    if fuck == "東部地區":
+    if "東部" in fuck:
         buttons_template = TemplateSendMessage(
             alt_text='東部地區 template',
             template=ButtonsTemplate(
@@ -626,13 +626,9 @@ def handle_message(event):
                 ]
         )
         
-    if isinstance(event, MessageEvent):
-            # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
-            answer = get_answer(fuck)
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=answer)
-            )
+    # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
+    answer = get_answer(fuck)
+    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
     return 0
 
 
