@@ -2,7 +2,9 @@ import requests
 import configparser
 from flask import Flask, request, abort
 import json
-import dbmanager
+import urllib.parse
+import os
+import psycopg2
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -11,6 +13,15 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import *
+'''
+url = urlparse.urlparse(os.environ['DATABASE_URL'])
+db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
+conn = psycopg2.connect(db)
+'''
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+cur = conn.cursor()
 
 app = Flask(__name__)
 config = configparser.ConfigParser()
@@ -39,18 +50,6 @@ def callback():
 
     return 'ok'
 
-   
-'''def reply(word):
-    query = ('SELECT reply1, reply2, reply3, reply4, reply5 FROM conversation '
-                'WHERE key = %s')
-    cursor.execute(query, (word,))
-    row = cursor.fetchone()
-    textArray=[]
-    for i in range (5):
-        if (row[i]!= None):
-            textArray.append(TextSendMessage(text=row[i]))
-    return textArray'''
-
 def get_answer(message_text):
     
     url = "https://qaqq.azurewebsites.net/qnamaker/knowledgebases/57d93b59-bfdf-4b1f-a3fd-96d3701ee431/generateAnswer"
@@ -78,7 +77,46 @@ def get_answer(message_text):
 
     except Exception:
 
-        return "Error occurs when finding answer"    
+        return "Error occurs when finding answer"
+        
+def DataInfo(con):
+    query = "SELECT name,text,img,link,line from data where city = %s"
+    cur.execute(query, (con,)) 
+    rows = cur.fetchall()
+    textArray=[]
+    for (name,te,img,link,line) in rows:
+        if (rows!= None):
+            textArray.append(
+                    CarouselColumn(
+                        thumbnail_image_url = img,
+                        title = name,
+                        text = te,
+                        actions=[
+                            MessageTemplateAction(
+                            label='了解'+name,
+                            text='我想了解'+name,
+                        ),
+                        URITemplateAction(
+                            label='官方網站',
+                            uri = link
+                        ),
+                        URITemplateAction(
+                            label='加入line',
+                            uri = line
+                        )
+                        ]
+                    ),                   
+                    )
+    return textArray
+
+     
+def selectData(text):
+    query = "SELECT %s from data"
+    cur.execute(query, (text,))
+    rows = cur.fetchall()
+    return rows
+
+        
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -579,15 +617,18 @@ def handle_message(event):
                     buttons_template
                 ]
         )
+    count = selectData('Count(city)')
     for c in selectData('city'):
         if c in tuple(fuck):
-            carousel_template = TemplateSendMessage(
-                alt_text= c,
-                template=CarouselTemplate(
-                    columns= DataInfo(c)
+            da = DataInfo(c)
+            for i in range(count):
+                carousel_template = TemplateSendMessage(
+                    alt_text= c,
+                    template=CarouselTemplate(
+                        columns= da[i]
+                    )
                 )
-            )
-            line_bot_api.reply_message(event.reply_token, carousel_template)
+                line_bot_api.reply_message(event.reply_token, carousel_template)
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text='目前無廠商呦'))
             
