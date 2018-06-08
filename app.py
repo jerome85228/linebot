@@ -20,8 +20,6 @@ config.read("config.ini")
 
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
-conn = psycopg2.connect(db)
-cur = conn.cursor()
 
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
@@ -45,7 +43,7 @@ def callback():
 
     return 'ok'
 
-def DataInfo(con):
+def DataInfo(con,cur):
     query = "SELECT name,text,img,link,line from data where city = %s"
     cur.execute(query, (con,)) 
     rows = cur.fetchall()
@@ -76,7 +74,7 @@ def DataInfo(con):
     return textArray
 
      
-def selectData(text):
+def selectData(text,cur):
     query = "SELECT %s from data"
     cur.execute(query, (text,))
     rows = cur.fetchall()
@@ -127,9 +125,10 @@ def handle_message(event):
     print("event.reply_token:", event.reply_token)
     print("event.message.text:", event.message.text)
     print("event.source.user_id:", event.source.user_id)
-    
+    conn = psycopg2.connect(db)
+    cur = conn.cursor()
     fuck = event.message.text
-    print(selectData('city'))
+    print(selectData('city',cur))
     
     
     if fuck == "profile":
@@ -621,12 +620,12 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    for c in selectData('city'):
+    for c in selectData('city',cur):
         if c in tuple(fuck):
             carousel_template = TemplateSendMessage(
                 alt_text= c,
                 template=CarouselTemplate(
-                    columns= DataInfo(c)
+                    columns= DataInfo(c,cur)
                 )
             )
             line_bot_api.reply_message(event.reply_token, carousel_template)
