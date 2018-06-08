@@ -129,7 +129,7 @@ def handle_message(event):
     print("event.source.user_id:", event.source.user_id)
     
     fuck = event.message.text
-    print(selectData('雲林縣')
+    print(selectData('雲林縣'))
     
     
     if fuck == "profile":
