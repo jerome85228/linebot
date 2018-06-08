@@ -1,7 +1,7 @@
 import requests
 import configparser
 from flask import Flask, request, abort
-
+import json
 import psycopg2
 import urllib.parse as urlparse
 import os
@@ -102,7 +102,7 @@ def get_answer(message_text):
                    json.dumps({'question': message_text}),
                    headers={
                        'Content-Type': 'application/json',
-                       'Authorization': 'EndpointKey 51454250-1b5b-4411-b726-bbeff5a8ee54'
+                       'QnAAuthKey': '51454250-1b5b-4411-b726-bbeff5a8ee54'
                    }
                )
 
