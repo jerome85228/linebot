@@ -14,8 +14,10 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
-url = urlparse.urlparse(os.environ['DATABASE_URL'])
+'''url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
+'''
+db = "dbname=ddl3cfrqk7kmdq user=yerzjcmqnuvauv password=91aaea5b60b59e59c9be939e937ebb9f14ad0618c30ba98e10500490c9bb213b host=ec2-54-204-2-26.compute-1.amazonaws.com port=5432"
 conn = psycopg2.connect(db)
 cur = conn.cursor()
 
@@ -630,10 +632,7 @@ def handle_message(event):
         carousel_template = TemplateSendMessage(
             alt_text= c,
             template=CarouselTemplate(
-                columns=[
-                    for i in range(len(da)):
-                        da[i]
-                ]
+                columns=[da]
         )
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
