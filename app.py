@@ -71,7 +71,6 @@ def get_answer(message_text):
 
         #這裡我們預設取第一個答案
         answer = data['answers'][0]['answer']
-        if answer == "No good match found in KB":
 
         return answer
 
