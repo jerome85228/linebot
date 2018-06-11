@@ -621,7 +621,23 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-        
+    da = null
+    for city in list(selectData('city')):
+        if city in fuck:           
+            da = DataInfo(city)
+            c = city
+    if (da!=null): 
+        carousel_template = TemplateSendMessage(
+            alt_text= c,
+            template=CarouselTemplate(
+                columns=[
+                    for i in range(len(da)):
+                        da[i]
+                ]
+        )
+        )
+        line_bot_api.reply_message(event.reply_token, carousel_template)
+    
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
     if answer == "No good match found in KB.":

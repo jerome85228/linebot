@@ -54,5 +54,14 @@ def selectData(text):
             text.append(j)            
     return text
     
+for city in list(selectData('city')):
+    if city in '我想看雲林縣':
+        da = DataInfo(city)
+for i in range(len(da)):
+    print(da[i])
+'''   
 print(selectData('city'))
 print(DataInfo('雲林縣'))
+'''
+
+
