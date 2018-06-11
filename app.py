@@ -623,23 +623,19 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    count = selectData('Count(city)')[0]
-    '''for c in selectData('city'):
-        if c in tuple(fuck):
+    for c in list(selectData('city')):
+        if c in fuck:
             da = DataInfo(c)      
             carousel_template = TemplateSendMessage(
             alt_text= c,
             template=CarouselTemplate(
                 columns=[
-                    for i in range(count):
+                    for i in range(len(da)):
                         da[i]
                 ]
             )
         )
-        line_bot_api.reply_message(event.reply_token, carousel_template)
-        else:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text='目前無廠商呦'))
-         '''   
+        line_bot_api.reply_message(event.reply_token, carousel_template) 
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
