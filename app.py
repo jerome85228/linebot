@@ -67,7 +67,9 @@ def get_answer(message_text):
     try: 
         #我們使用免費service可能會超過限制（一秒可以發的request數）
         if "error" in data:
-            return data['小循不懂ˊˇˋ']
+            return data["error"]["message"]
+        if data = "No good match found in KB":
+            return "小循不懂"
         #這裡我們預設取第一個答案
         answer = data['answers'][0]['answer']
 
@@ -494,7 +496,7 @@ def handle_message(event):
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶/n/n小循知道現在地球很老惹'
+                        text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶\n\n小循知道現在地球很老惹'
                     ),
 					TextSendMessage(
                         text='小循知道現在地球很老惹' 
