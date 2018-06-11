@@ -623,19 +623,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-   ''' for c in list(selectData('city')):
-        if c in fuck:
-            da = DataInfo(c)      
-            carousel_template = TemplateSendMessage(
-            alt_text= c,
-            template=CarouselTemplate(
-                columns=[
-                    for i in range(len(da)):
-                        da[i]
-                ]
-            )
-        )
-        line_bot_api.reply_message(event.reply_token, carousel_template) '''
+        
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
