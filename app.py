@@ -68,7 +68,7 @@ def get_answer(message_text):
         #我們使用免費service可能會超過限制（一秒可以發的request數）
         if "error" in data:
             return data["error"]["message"]
-        if data = "No good match found in KB":
+        if data == "No good match found in KB":
             return "小循不懂"
         #這裡我們預設取第一個答案
         answer = data['answers'][0]['answer']
