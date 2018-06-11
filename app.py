@@ -67,7 +67,7 @@ def get_answer(message_text):
     try: 
         #我們使用免費service可能會超過限制（一秒可以發的request數）
         if "error" in data:
-             answer = "小循不懂"
+            return data["error"]["message"]
 
         #這裡我們預設取第一個答案
         answer = data['answers'][0]['answer']
@@ -627,6 +627,8 @@ def handle_message(event):
         
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
+    if answer == "No good match found in KB.":
+        answer = "小循不懂(〒︿〒)"
     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
     return 0
 
