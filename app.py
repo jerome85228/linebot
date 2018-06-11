@@ -67,7 +67,7 @@ def get_answer(message_text):
     try: 
         #我們使用免費service可能會超過限制（一秒可以發的request數）
         if "error" in data:
-            return data["error"]["message"]
+            return data['小循不懂ˊˇˋ']
         #這裡我們預設取第一個答案
         answer = data['answers'][0]['answer']
 
@@ -84,26 +84,32 @@ def DataInfo(con):
     textArray=[]
     for (name,te,img,link,line) in rows:
         if (rows!= None):
+            text = []
+    for i in rows:
+        text.append(list(i))
+    textArray = []
+    if (len(text) < 5):
+        for i in range(len(text)):
             textArray.append(
                     CarouselColumn(
-                        thumbnail_image_url = img,
-                        title = name,
-                        text = te,
+                        thumbnail_image_url = text[i][2],
+                        title = text[i][0],
+                        text = text[i][1],
                         actions=[
                             MessageTemplateAction(
-                            label='了解'+name[0],
-                            text='我想了解'+name[0],
+                            label='了解'+text[i][0],
+                            text='我想了解'+text[i][0]
                         ),
                         URITemplateAction(
                             label='官方網站',
-                            uri = link[0]
+                            uri = text[i][3]
                         ),
                         URITemplateAction(
                             label='加入line',
-                            uri = line[0]
+                            uri = text[i][4]
                         )
                         ]
-                    ),                   
+                    ),                
                     )
     return textArray
 
@@ -488,7 +494,7 @@ def handle_message(event):
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶'
+                        text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶/n/n小循知道現在地球很老惹'
                     ),
 					TextSendMessage(
                         text='小循知道現在地球很老惹' 
