@@ -127,13 +127,10 @@ def selectData(text):
         
 
 @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    print("event.reply_token:", event.reply_token)
-    print("event.message.text:", event.message.text)
-    print("event.source.user_id:", event.source.user_id)
+def handle_message(event):    
+    print("使用者:"+event.source.user_id+" 傳來:"+event.message.text)
     
     fuck = event.message.text
-    print(selectData('city'))
     
     if fuck == "profile":
         if isinstance(event.source, SourceUser):
