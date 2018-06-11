@@ -635,12 +635,12 @@ def handle_message(event):
         )
         )
         line_bot_api.reply_message(event.reply_token, carousel_template)
-    
-    # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
-    answer = get_answer(fuck)
-    if answer == "No good match found in KB.":
-        answer = "小循不懂(〒︿〒)"
-    line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
+    else:       
+        # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
+        answer = get_answer(fuck)
+        if answer == "No good match found in KB.":
+            answer = "小循不懂(〒︿〒)"
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
     return 0
 
 
