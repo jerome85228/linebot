@@ -623,6 +623,7 @@ def handle_message(event):
                     buttons_template
                 ]
         )
+    da = None
     for city in list(selectData('city')):
         if city in fuck:           
             da = DataInfo(city)
