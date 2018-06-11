@@ -623,12 +623,11 @@ def handle_message(event):
                     buttons_template
                 ]
         )
-    da = null
     for city in list(selectData('city')):
         if city in fuck:           
             da = DataInfo(city)
             c = city
-    if (da!=null): 
+    if (da!= None): 
         carousel_template = TemplateSendMessage(
             alt_text= c,
             template=CarouselTemplate(
