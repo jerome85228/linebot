@@ -627,6 +627,8 @@ def handle_message(event):
         if city in fuck:           
             da = DataInfo(city)
             c = city
+    print(da)
+    print(c)
     if (da!= None): 
         carousel_template = TemplateSendMessage(
             alt_text= c,
