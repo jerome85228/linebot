@@ -87,29 +87,29 @@ def vendorInfo(city):
     cur.execute(query)
     rows = cur.fetchall()
 	
-	test = []
+	textArray = []
     reslut = []
 	
 	#旋轉木馬最多只能傳五個，如果超過要換另個寫法
     if (len(rows) < 5 && len(rows) != 0):
         for i in range(len(rows)):
-            text.append(
+            textArray.append(
                     CarouselColumn(
-                        thumbnail_image_url = text[i][2],
-                        title = text[i][0],
-                        text = text[i][1],
-                        actions=[
+                        thumbnail_image_url = rows[i][2],
+                        title = rows[i][0],
+                        text = rows[i][1],
+                        actions = [
                             MessageTemplateAction(
-								label='了解'+text[i][0],
-								text='我想了解'+text[i][0]
+								label = '了解' + rows[i][0],
+								text = '我想了解' + rows[i][0]
 							),
 							URITemplateAction(
 								label='官方網站',
-								uri = text[i][3]
+								uri = rows[i][3]
 							),
 							URITemplateAction(
 								label='加入line',
-								uri = text[i][4]
+								uri = rows[i][4]
 							)
                         ]
                     ),                
