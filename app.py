@@ -14,6 +14,7 @@ from linebot.exceptions import (
 )
 from linebot.models import *
 
+#db連線
 url = urlparse.urlparse(os.environ['DATABASE_URL'])
 db = "dbname=%s user=%s password=%s host=%s port=%s" % (url.path[1:], url.username, url.password, url.hostname, url.port)
 
@@ -24,11 +25,10 @@ app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-
-
-
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
+
+twCity = ['基隆市','台北市','新北市','桃園縣','新竹市','新竹縣','苗栗縣','台中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','台南市','高雄市','屏東縣','台東縣','花蓮縣','宜蘭縣','澎湖縣','金門縣','連江縣']
 
 
 @app.route("/callback", methods=['POST'])
@@ -49,7 +49,8 @@ def callback():
 
     return 'ok'
 
-def get_answer(message_text):
+	#要付錢的QnAMaker寫法
+'''def get_answer(message_text):
     
     url = "https://qaqq.azurewebsites.net/qnamaker/knowledgebases/57d93b59-bfdf-4b1f-a3fd-96d3701ee431/generateAnswer"
 
@@ -78,53 +79,52 @@ def get_answer(message_text):
     except Exception:
 
         return "Error occurs when finding answer"
-        
-def DataInfo(con):
-    query = "SELECT name,text,img,link,line from data where city = '"+con+"'"
+'''        
+
+#讀取廠商
+def vendorInfo(city):
+    query = "SELECT name, memo, img, link, line from vendor where city = '" + city + "'"
     cur.execute(query)
     rows = cur.fetchall()
-    textArray=[]
-    for (name,te,img,link,line) in rows:
-        if (rows!= None):
-            text = []
-    for i in rows:
-        text.append(list(i))
-    textArray = []
-    if (len(text) < 5):
-        for i in range(len(text)):
-            textArray.append(
+	
+	test = []
+    reslut = []
+	
+	#旋轉木馬最多只能傳五個，如果超過要換另個寫法
+    if (len(rows) < 5 && len(rows) != 0):
+        for i in range(len(rows)):
+            text.append(
                     CarouselColumn(
                         thumbnail_image_url = text[i][2],
                         title = text[i][0],
                         text = text[i][1],
                         actions=[
                             MessageTemplateAction(
-                            label='了解'+text[i][0],
-                            text='我想了解'+text[i][0]
-                        ),
-                        URITemplateAction(
-                            label='官方網站',
-                            uri = text[i][3]
-                        ),
-                        URITemplateAction(
-                            label='加入line',
-                            uri = text[i][4]
-                        )
+								label='了解'+text[i][0],
+								text='我想了解'+text[i][0]
+							),
+							URITemplateAction(
+								label='官方網站',
+								uri = text[i][3]
+							),
+							URITemplateAction(
+								label='加入line',
+								uri = text[i][4]
+							)
                         ]
                     ),                
-                    )
-    return textArray
+                )
+	
+    if (rows != None):
+		result = TemplateSendMessage(
+            alt_text = city,
+            template = CarouselTemplate(
+                columns = test
+	else:
+		reslut = TextMessage(text="此地方尚未有據點呦~")
 
-     
-def selectData(text):
-    query = "SELECT "+text+" from data"
-    cur.execute(query)
-    rows = cur.fetchall()
-    count = "SELECT Count("+text+") from data"
-    text=[]
-    for i in range(len(rows)):  
-        text.append(rows[i-1][0])
-    return text
+	
+    return result
         
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -152,6 +152,9 @@ def handle_message(event):
                 TextMessage(text="Bot can't use profile API without user ID"))
 	
     if "據點" in fuck :
+	
+	#舊式寫法
+	'''
         buttons_template = TemplateSendMessage(
             alt_text='據點查詢 template',
             template=ButtonsTemplate(
@@ -177,18 +180,17 @@ def handle_message(event):
                     )
                 ]
             )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='這是目前台灣與循環經濟有關的地方喔!(๑´ㅂ`๑)' 
-                    ),
-					TextSendMessage(
-                        text='點進去可以看到各區縣市( • ̀ω•́ )ﾉ' 
-                    ),
-                    buttons_template
-                ]
+        )'''
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(
+                        text='這是目前台灣與循環經濟有關的地方喔!(๑´ㅂ`๑)',quick_reply = QuickReply(
+							items=[
+                                QuickReplyButton(action=MessageAction(label="北部[尚未有據點]", text="北部地區")),
+								QuickReplyButton(action=MessageAction(label="中部", text="中部地區")),
+								QuickReplyButton(action=MessageAction(label="南部[尚未有據點]", text="南部地區")),
+								QuickReplyButton(action=MessageAction(label="東部[尚未有據點]", text="東部地區")),
+							])
             )
+        )
 
 		  		
     if "北部" in fuck:
@@ -622,26 +624,27 @@ def handle_message(event):
                     buttons_template
                 ]
         )
+		
     da = None
-    for city in list(selectData('city')):
+    for city in twCity):
         if city in fuck:           
-            da = DataInfo(city)
-            c = city
+            da = vendorInfo(city)
+			
     if (da!= None): 
-        carousel_template = TemplateSendMessage(
-            alt_text= c,
-            template=CarouselTemplate(
-                columns=da
-        )
-        )
-        line_bot_api.reply_message(event.reply_token, carousel_template)       
+        line_bot_api.reply_message(event.reply_token, da)  
+
+'''		
     # 此處我們呼叫get_answer函數，從QnAMaker服務取得答案
     answer = get_answer(fuck)
     if answer == "No good match found in KB.":
         answer = "小循不懂(〒︿〒)"
     line_bot_api.reply_message(event.reply_token,TextSendMessage(text=answer))
     return 0
+'''
 
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "小循不懂(〒︿〒)"))
+	
+    return 0
 
     	
     cursor.close()
