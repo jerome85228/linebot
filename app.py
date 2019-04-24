@@ -28,8 +28,13 @@ config.read("config.ini")
 line_bot_api = LineBotApi(config['line_bot']['Channel_Access_Token'])
 handler = WebhookHandler(config['line_bot']['Channel_Secret'])
 
-twCity = ['基隆市','台北市','新北市','桃園縣','新竹市','新竹縣','苗栗縣','台中市','彰化縣','南投縣','雲林縣','嘉義市','嘉義縣','台南市','高雄市','屏東縣','台東縣','花蓮縣','宜蘭縣','澎湖縣','金門縣','連江縣']
-
+tw = {
+    '北部': ['基隆市', '台北市', '新北市', '桃園縣', '新竹市', '新竹縣', '宜蘭縣'],
+    '中部': ['苗栗縣', '台中市', '彰化縣', '南投縣', '雲林縣'],
+    '南部': ['嘉義市', '嘉義縣', '台南市', '高雄市', '屏東縣', '澎湖縣'],
+    '東部': ['台東縣', '花蓮縣'],
+    '其他': ['金門縣', '連江縣']
+}
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -47,58 +52,86 @@ def callback():
     except InvalidSignatureError:
         abort(400)
 
-    return 'ok'   
+    return 'ok'
 
-#讀取廠商
+#查詢地區是否有廠商
+def findArea(cityList):
+    cityList = str(cityList).lstrip('[').rstrip(']')
+    query = "SELECT city, count(*) from vendor where city in (" + cityList + ") group by city"
+    cur.execute(query)
+    result = cur.fetchall()
+
+    return result
+
+#讀取地區所擁有的廠商
 def vendorInfo(city):
-    query = "SELECT name, memo, img, link, line from vendor where city = '" + city + "'"
+    query = "SELECT name, memo, img, link, line from vendor where city like '" + city + "%'"
     cur.execute(query)
     rows = cur.fetchall()
 
     textArray = []
-    reslut = []
 
-    #旋轉木馬最多只能傳五個，如果超過要換另個寫法
-    for i in range(len(rows)):
-        textArray.append(
-            CarouselColumn(
-                thumbnail_image_url = rows[i][2],
-                title = rows[i][0],
-                text = rows[i][1],
-                actions = [
-                    MessageTemplateAction(
-                        label = '了解' + rows[i][0],
-                        text = '我想了解' + rows[i][0]
-                    ),
-                    URITemplateAction(
-                        label='官方網站',
-                        uri = rows[i][3]
-                    ),
-                    URITemplateAction(
-                        label='加入line',
-                        uri = rows[i][4]
-                    ),
-                ]
-            ),
-        )
-
-    if (rows != None):
+    #旋轉木馬最多只能傳10個，如果超過要換另個寫法
+    if (len(rows) > 1):
+        for data in rows:
+            textArray.append(
+                CarouselColumn(
+                    thumbnail_image_url = data[2],
+                    title = data[0],
+                    text = data[1],
+                    actions = [
+                        MessageTemplateAction(
+                            label = '了解' + data[0],
+                            text = '我想了解' + data[0]
+                        ),
+                        URITemplateAction(
+                            label ='官方網站',
+                            uri = data[3]
+                        ),
+                        URITemplateAction(
+                            label ='加入line',
+                            uri = data[4]
+                        ),
+                    ]
+                ),
+            )
+            
+        return TemplateSendMessage(alt_text = city, template = CarouselTemplate(columns = textArray))
+    elif (len(rows) == 1):
         result = TemplateSendMessage(
-        alt_text = city,
-        template = CarouselTemplate(columns = textArray)
+            alt_text = city,
+            template = ButtonsTemplate(
+                thumbnail_image_url = rows[0][2],
+                title = rows[0][0],
+                text = rows[0][1],
+                actions = [               
+                    MessageTemplateAction(
+                        label = '了解' + rows[0][0],
+                        text = '我想了解' + rows[0][0]
+                    ),
+                    URITemplateAction(
+                        label = '官方網站',
+                        uri = rows[0][3]
+                    ),
+                    URITemplateAction(
+                        label = '加入line',
+                        uri = rows[0][4]
+                    )        
+                ]
+            )
         )
-    else:
-        reslut = TextMessage(text="此地方尚未有據點呦~")
-    
-    return result
         
+        return result
+    
+    return TextMessage(text="此地方尚未有據點呦~")
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):    
     print("使用者:"+event.source.user_id+" 傳來:"+event.message.text)
-    
+
+    #reply_message能回傳訊息最大數量為5，token只能使用一次
     fuck = event.message.text
-    
+
     if fuck == "profile":
         if isinstance(event.source, SourceUser):
             profile = line_bot_api.get_profile(event.source.user_id)
@@ -109,255 +142,75 @@ def handle_message(event):
                     ),
                     TextSendMessage(
                         text = 'Status message: ' + profile.status_message
-                    )
+                    ),
                 ]
             )
         else:
             line_bot_api.reply_message(
                 event.reply_token,
                 TextMessage(text="Bot can't use profile API without user ID"))
-    
-    if "據點" in fuck :
+
+    if "據點" in fuck:
+        item = []
+        for area in tw.keys():
+            item.append(QuickReplyButton(action = MessageAction(label = area + '地區', text = area + '地區')),)
+
         line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text = '這是目前台灣與循環經濟有關的地方喔!(๑´ㅂ`๑)', quick_reply = QuickReply(
-                items = [
-                    QuickReplyButton(action = MessageAction(label = "北部[尚未有據點]", text = "北部地區")),
-                    QuickReplyButton(action = MessageAction(label = "中部", text = "中部地區")),
-                    QuickReplyButton(action = MessageAction(label = "南部[尚未有據點]", text = "南部地區")),
-                    QuickReplyButton(action = MessageAction(label = "東部[尚未有據點]", text = "東部地區")),
-                ])
+            TextSendMessage(text = '可以查看目前台灣與循環經濟有關的地方喔!(๑´ㅂ`๑)', quick_reply = QuickReply(items = item),
             )
         )
 
+    for area in tw.keys():
+        if area in fuck:
+            cityCount = findArea(tw[area])
+            
+            item = []
+            #如果縣市有廠商，則顯示
+            for city in cityCount:
+                if (city[1] > 0):
+                    item.append(QuickReplyButton(action = MessageAction(label = city[0], text = city[0])),)
+            
+            #如果此地區無任何廠商，則顯示其他地區做為選項
+            if (len(item) == 0):
+                for areaOther in tw.keys():
+                    if (areaOther != area):
+                        item.append(QuickReplyButton(action = MessageAction(label = areaOther + '地區', text = areaOther + '地區')),)
                 
-    if "北部" in fuck:
-        carousel_template = TemplateSendMessage(
-            alt_text='北部地區 template',
-            template=CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
-                        title='北部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='臺北市',
-                                text='臺北市',
-                            ),
-                            MessageTemplateAction(
-                                label='新北市',
-                                text='新北市'
-                            ),
-                            MessageTemplateAction(
-                                label='基隆市',
-                                text='基隆市'
-                            )
-                        ]
-                    ),
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
-                        title='北部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='宜蘭市',
-                                text='宜蘭市',
-                            ),
-                            MessageTemplateAction(
-                                label='桃園市',
-                                text='桃園市'
-                            ),
-                            MessageTemplateAction(
-                                label=' ',
-                                text=' '
-                            )
-                        ]
-                    ),
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/dlIRYTP.jpg',
-                        title='北部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='新竹市',
-                                text='新竹市',
-                            ),
-                            MessageTemplateAction(
-                                label='新竹縣',
-                                text='新竹縣'
-                            ),
-                            MessageTemplateAction(
-                                label=' ',
-                                text=' '
-                            )
-                        ]
-                    )
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='目前北部沒有任何相關的據點呦(๑•́ ₃ •̀๑)'
-                    ),
-                    TextSendMessage(
-                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
-                    ),
-                    carousel_template
-                ]
-        )
-        
-        
-    if "中部" in fuck:
-        carousel_template = TemplateSendMessage(
-            alt_text='中部地區 template',
-            template=CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/qLkJthI.jpg',
-                        title='中部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='苗栗縣[尚未有據點]',
-                                text='苗栗縣',
-                            ),
-                            MessageTemplateAction(
-                                label='臺中市[尚未有據點]',
-                                text='臺中市'
-                            ),
-                            MessageTemplateAction(
-                                label='彰化縣[尚未有據點]',
-                                text='彰化縣'
-                            )
-                        ]
-                    ),
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/qLkJthI.jpg',
-                        title='中部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='南投縣[尚未有據點]',
-                                text='南投縣',
-                            ),
-                            MessageTemplateAction(
-                                label='雲林縣',
-                                text='雲林縣',
-                            ),
-                            MessageTemplateAction(
-                                label=' ',
-                                text=' '
-                            )
-                        ]
-                    )
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='目前雲林縣有資訊喔ヽ(́◕◞౪◟◕‵)ﾉ' 
-                    ),
-                    TextSendMessage(
-                        text='還不趕快點進去看ε٩(๑> ₃ <)۶з' 
-                    ),
-                    carousel_template
-                ]
-        )
-    
-        
-    if "南部" in fuck:
-        carousel_template = TemplateSendMessage(
-            alt_text='南部地區 template',
-            template=CarouselTemplate(
-                columns=[
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/PBO9YmT.jpg',
-                        title='南部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='嘉義市',
-                                text='嘉義市',
-                            ),
-                            MessageTemplateAction(
-                                label='嘉義縣',
-                                text='嘉義縣'
-                            ),
-                            MessageTemplateAction(
-                                label='臺南市',
-                                text='臺南市'
-                            )
-                        ]
-                    ),
-                    CarouselColumn(
-                        thumbnail_image_url='https://i.imgur.com/PBO9YmT.jpg',
-                        title='南部據點查詢',
-                        text='請選擇縣市',
-                        actions=[
-                            MessageTemplateAction(
-                                label='高雄市',
-                                text='高雄市',
-                            ),
-                            MessageTemplateAction(
-                                label='屏東縣',
-                                text='屏東縣'
-                            ),
-                            MessageTemplateAction(
-                                label='澎湖縣',
-                                text='澎湖縣',
-                            )
-                        ]
-                    )
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='目前南部沒有任何相關的據點呦(๑•́ ₃ •̀๑)' 
-                    ),
-                    TextSendMessage(
-                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
-                    ),
-                    carousel_template
-                ]
-        )
-    
-        
-    if "東部" in fuck:
-        buttons_template = TemplateSendMessage(
-            alt_text='東部地區 template',
-            template=ButtonsTemplate(
-                thumbnail_image_url='https://i.imgur.com/XyFXwzp.jpg',
-                title='東部據點查詢',
-                text='請選擇縣市',
-                actions=[
-                    MessageTemplateAction(
-                        label='花蓮縣',
-                        text='花蓮縣',
+                line_bot_api.reply_message(
+                    event.reply_token, [
+                        TextSendMessage(
+                            text='目前' + area +'沒有任何相關的據點呦(๑•́ ₃ •̀๑)'
                         ),
-                    MessageTemplateAction(
-                        label='臺東縣',
-                        text='臺東縣'
-                        )
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='目前東部沒有任何相關的據點呦(๑•́ ₃ •̀๑)' 
-                    ),
-                    TextSendMessage(
-                        text='可利用選單去察看別的地方呦(๑• ∀ •๑)σ' 
-                    ),
-                    buttons_template
-                ]
-        )
+                        TextSendMessage(
+                            text='可利用快速選項去查看別的地方呦(๑• ∀ •๑)σ', quick_reply = QuickReply(items = item),
+                        ),
+                    ]
+                )
+            else:
+                line_bot_api.reply_message(
+                    event.reply_token, [
+                        TextSendMessage(
+                            text='目前有顯示縣市有資訊喔ヽ(́◕◞౪◟◕‵)ﾉ' 
+                        ),
+                        TextSendMessage(
+                            text='還不趕快點進去看ε٩(๑> ₃ <)۶з', quick_reply = QuickReply(items = item), 
+                        ),
+                    ]
+                )
 
- 
+    
+    modal = None
+    
+    #判斷是否有關鍵字是城市
+    for area in tw.keys():
+        for city in tw[area]:
+            if city in fuck :
+                modal = vendorInfo(city)
+
+    #撈取城市相關廠商
+    if (modal != None) :
+        line_bot_api.reply_message(event.reply_token, modal)
+
     if "循環經濟" in fuck:
         buttons_template = TemplateSendMessage(
             alt_text='循環經濟 template',
@@ -413,94 +266,55 @@ def handle_message(event):
         )
     
     if fuck == "小循說故事":
-        confirm_template = TemplateSendMessage(
-            alt_text='說故事 template',
-            template=ConfirmTemplate(
-                text='請選擇，要選左邊的呦<3',
-                actions=[
-                    MessageTemplateAction(
-                        label='繼續說',
-                        text='繼續說'
-                    ),
-                    MessageTemplateAction(
-                        label='不想聽了',
-                        text='閉嘴'
-                    )
-                ]
-            )
-        )
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
                         text='好的好的~小循來說故事囉٩(๑•̀ω•́๑)۶'
                     ),
                     TextSendMessage(
-                        text='小循知道現在地球很老惹' 
+                        text='小循知道現在地球很老惹\n然而人們一直耗資源製造東西丟東西(つд⊂)\n所以地球生氣惹ヽ(#`Д´)ﾉ' 
                     ),
                     TextSendMessage(
-                        text='然而人們一直耗資源製造東西丟東西(つд⊂)' 
-                    ),
-                    TextSendMessage(
-                        text='所以地球生氣惹ヽ(#`Д´)ﾉ' 
-                    ),
-                    confirm_template
-                ]
-        )
-
-    if fuck == "繼續說":
-        confirm_template = TemplateSendMessage(
-            alt_text='說故事 template',
-            template=ConfirmTemplate(
-                text='請選擇，要選左邊的呦<3',
-                actions=[
-                    MessageTemplateAction(
-                        label='繼續說',
-                        text='繼續說2'
-                    ),
-                    MessageTemplateAction(
-                        label='不想聽了',
-                        text='閉嘴'
-                    )
-                ]
-            )
-        )
-        line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(
-                        text='地球氣候愈來愈可怕了'
-                    ),
-                    TextSendMessage(
-                        text='為了改善環境，循環經濟粗現了' 
-                    ),
-                    TextSendMessage(
-                        text='為您展示一下傳統的生產模式' 
+                        text='地球氣候愈來愈可怕了\n為了改善環境，循環經濟粗現了\n為您展示一下傳統的生產方式'
                     ),
                     ImageSendMessage(
                         original_content_url='https://i.imgur.com/1hMVlfd.jpg',
                         preview_image_url='https://i.imgur.com/1hMVlfd.jpg'
                     ),
-                    confirm_template
+                   TextSendMessage(
+                        text='沒錯~傳統的就是生產後丟棄丟棄在丟棄\n每個階段都有廢棄物不斷產生',
+                        quick_reply = QuickReply(items = 
+                            [
+                                QuickReplyButton(action = MessageAction(label = '繼續說', text = '[小循說故事]繼續說')),
+                                QuickReplyButton(action = MessageAction(label = '不想聽了', text = '閉嘴')),
+                            ]),
+                    )
                 ]
         )
 
-    if fuck == "繼續說2":
+    if fuck == "[小循說故事]繼續說":
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='再為您展示循環經濟的方式'
+                        text='再為您展示循環經濟的生產方式'
                     ),
                     ImageSendMessage(
                         original_content_url='https://i.imgur.com/nA5BVgf.jpg',
                         preview_image_url='https://i.imgur.com/nA5BVgf.jpg'
                     ),
                     TextSendMessage(
-                        text='沒錯~傳統的就是丟棄丟棄在丟棄，而循環經濟就是可再利用，減少廢棄物' 
+                        text='而循環經濟簡言而知就是所有東西可再利用\n完全大大減少廢棄物的產生' 
                     ),
                     TextSendMessage(
-                        text='所以循環經濟不僅僅環保、還可以減少消耗資源，大大的減低成本呢!' 
+                        text='所以循環經濟不僅僅環保\n還可以減少消耗資源\n大大的減低成本呢!' 
                     ),
                     TextSendMessage(
-                        text='是不是有理解了呢ヾ(*´∀ ˋ*)ﾉ' 
+                        text='是不是有理解了呢ヾ(*´∀ ˋ*)ﾉ',
+                        quick_reply = QuickReply(items = 
+                            [
+                                QuickReplyButton(action = MessageAction(label = '沒有', text = '小循說故事')),
+                                QuickReplyButton(action = MessageAction(label = '有', text = '閉嘴')),
+                            ]),
                     )
                 ]
         )
@@ -550,25 +364,14 @@ def handle_message(event):
         line_bot_api.reply_message(
                 event.reply_token, [
                     TextSendMessage(
-                        text='歡迎來到循跡點點ε٩(๑> ₃ <)۶з'
+                        text='歡迎來到循跡點點ε٩(๑> ₃ <)۶з\n我是小循機器人٩(๑•̀ω•́๑)۶\n有什麼我可以為您服務的呢ヾ(*´∀ ˋ*)ﾉ'
                     ),
                     TextSendMessage(
-                        text='我是小循機器人٩(๑•̀ω•́๑)۶'
-                    ),
-                    TextSendMessage(
-                        text='有什麼我可以為您服務的呢ヾ(*´∀ ˋ*)ﾉ'
+                        text='請記得將Line大人更新到最新版本呦\n才不會錯過小循的高級功能'
                     ),
                     buttons_template
                 ]
         )
-
-    da = None
-    for city in twCity :
-        if city in fuck :           
-            da = vendorInfo(city)
-
-    if (da!= None) :
-        line_bot_api.reply_message(event.reply_token, da)
 
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "小循不懂(〒︿〒)"))
 
